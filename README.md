@@ -1,5 +1,4 @@
 # CrackaSmile
-Got no One to Save my Soul
 Восстану я из гнета пепла,
 
 На зов судьбы откликнусь я.
