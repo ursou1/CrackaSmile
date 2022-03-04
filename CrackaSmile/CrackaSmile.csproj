@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net5.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="ModelsApi">
+      <HintPath>..\..\AForcedSmile\ModelsApi\bin\Debug\net5.0\ModelsApi.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Themes\" />
+    <Folder Include="Images\" />
+  </ItemGroup>
+
+</Project>
