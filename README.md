@@ -1,4 +1,4 @@
-# CrackaSmile
+# Crack a Smile
 ![image](https://user-images.githubusercontent.com/71076236/156720586-ceb88615-0949-46b2-8ed5-7b3738ff2e47.png)
 
 Восстану я из гнета пепла,
