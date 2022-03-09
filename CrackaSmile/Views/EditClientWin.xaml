@@ -5,8 +5,32 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CrackaSmile.Views"
         mc:Ignorable="d"
-        Title="EditClientWin" Height="450" Width="800">
+        Title="EditClientWin"
+        Height="700"
+        Width="1200" WindowStartupLocation="CenterScreen"
+        Style="{StaticResource CustomWindowStyle}">
     <Grid>
-        
+        <StackPanel  >
+            <Label Content="Добавить нового клиента:" FontSize="22" HorizontalAlignment="Center" Margin="50 50 0 0" FontWeight="Bold"/>
+
+            <Label Content="Name:" FontSize="20" HorizontalAlignment="Center" Margin="0 5 0 5"/>
+                <TextBox Text="{Binding Name}" Width="200" FontSize="20"/>
+
+                <Label Content="FatherName:" FontSize="20" HorizontalAlignment="Center" Margin="0 5 0 5"/>
+                <TextBox Text="{Binding FatherName}" Width="200" FontSize="20"/>
+
+            <Label Content="LastName:" FontSize="20" HorizontalAlignment="Center" Margin="0 5 0 5"/>
+                <TextBox Text="{Binding LastName}" Width="200" FontSize="20"/>
+
+            <Label Content="Address:" FontSize="20" HorizontalAlignment="Center" Margin="0 5 0 5"/>
+                <TextBox Text="{Binding Address}" Width="200" FontSize="20"/>
+
+            <Label Content="Email:" FontSize="20" HorizontalAlignment="Center" Margin="0 5 0 5"/>
+                <TextBox Text="{Binding Email}" Width="200" FontSize="20"/>
+
+            <Label Content="Telephone:" FontSize="20" HorizontalAlignment="Center" Margin="0 5 0 5"/>
+                <TextBox Text="{Binding Telephone}" Width="200" FontSize="20"/>
+        </StackPanel>
+        <Button Command="{Binding SaveClient}" Margin="0 0 195 30" Content="Сохранить клиента" Width="170" Height="35"  VerticalContentAlignment="Center"  FontSize="18" VerticalAlignment="Bottom" HorizontalAlignment="Right" />
     </Grid>
 </Window>
