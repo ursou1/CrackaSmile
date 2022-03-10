@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace CrackaSmile.ViewModels
 {
@@ -28,12 +29,21 @@ namespace CrackaSmile.ViewModels
 
             if (client == null)
             {
-                //CreateNewClient();
+                AddClient = new ClientApi
+                {
+                    Name = "Name",
+                    FatherName = "FatherName",
+                    LastName = "NaLastNameme",
+                    Address = "Address",
+                    Email = "Email",
+                    Telephone = "Telephone"
+                };
             }
             else
             {
                 AddClient = new ClientApi
                 {
+                    Id = client.Id,
                     Name = client.Name,
                     FatherName = client.FatherName,
                     LastName = client.LastName,
@@ -41,41 +51,44 @@ namespace CrackaSmile.ViewModels
                     Email = client.Email,
                     Telephone = client.Telephone
                 };
-               
+
+                Save = new CustomCommand(() =>
+                {
+                    if (AddClient.Id != 0)
+                    {
+                        EditClient();
+                    }
+                    else
+                    {
+                        CreateNewClient();
+                    }
+                    foreach (Window window in Application.Current.Windows)
+                    {
+                        if (window.DataContext == this) CloseWin(window);
+                    }
+                });
             }
         }
 
 
         public async Task CreateNewClient()
         {
-
             ClientApi editClient = new ClientApi
             {
-                Name = "test",
-                FatherName = "test",
-                LastName = "test",
-                Address = "test",
-                Email = "test",
-                Telephone = "test"
+                Name = AddClient.Name,
+                FatherName = AddClient.FatherName,
+                LastName = AddClient.LastName,
+                Address = AddClient.Address,
+                Email = AddClient.Email,
+                Telephone = AddClient.Telephone
 
             };
-            await Api.PostAsync<ClientApi>(editClient,"Client");
+            await Api.PostAsync<ClientApi>(editClient, "Client");
         }
 
         public async Task EditClient()
         {
-
-            ClientApi editClient = new ClientApi
-            {
-                Name = "test",
-                FatherName = "test",
-                LastName = "test",
-                Address = "test",
-                Email = "test",
-                Telephone = "test"
-
-            };
-            await Api.PutAsync<ClientApi>(editClient, "Client");
+            await Api.PutAsync<ClientApi>(AddClient, "Client");
         }
 
         public async Task TakeListClients()//вызов клиентов
@@ -83,6 +96,12 @@ namespace CrackaSmile.ViewModels
             var result = await Api.GetListAsync<ClientApi[]>("Client");
             clients = new List<ClientApi>(result);
             SignalChanged("clients");
+        }
+
+        public void CloseWin(object obj)
+        {
+            Window win = obj as Window;
+            win.Close();
         }
     }
 }

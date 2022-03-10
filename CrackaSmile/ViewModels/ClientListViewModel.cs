@@ -39,8 +39,8 @@ namespace CrackaSmile.ViewModels
 
             AddClient = new CustomCommand(()=>
             {
-                EditClientWin addClient = new EditClientWin();
-                addClient.ShowDialog();
+                EditClientWin editClient = new EditClientWin();
+                editClient.ShowDialog();
             });
 
             EditClient = new CustomCommand(() =>

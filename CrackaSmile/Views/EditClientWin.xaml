@@ -31,6 +31,6 @@
             <Label Content="Telephone:" FontSize="20" HorizontalAlignment="Center" Margin="0 5 0 5"/>
                 <TextBox Text="{Binding Telephone}" Width="200" FontSize="20"/>
         </StackPanel>
-        <Button Command="{Binding SaveClient}" Margin="0 0 195 30" Content="Сохранить клиента" Width="170" Height="35"  VerticalContentAlignment="Center"  FontSize="18" VerticalAlignment="Bottom" HorizontalAlignment="Right" />
+        <Button Command="{Binding Save}" Margin="0 0 195 30" Content="Сохранить клиента" Width="170" Height="35"  VerticalContentAlignment="Center"  FontSize="18" VerticalAlignment="Bottom" HorizontalAlignment="Right" Cursor="Hand" />
     </Grid>
 </Window>
