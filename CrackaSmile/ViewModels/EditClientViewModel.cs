@@ -11,9 +11,19 @@ namespace CrackaSmile.ViewModels
     public class EditClientViewModel: BaseViewModel
     {
         public ClientApi AddClient { get; set; }
+
+        #region par
+        
+        public List<ClientApi> clients { get; set; }
+        #endregion
+
+        #region commands
+        public CustomCommand Save { get; set; }
+        #endregion
+
+
         public EditClientViewModel(ClientApi client)
         {
-
             TakeListClients();
 
             if (client == null)
@@ -31,8 +41,7 @@ namespace CrackaSmile.ViewModels
                     Email = client.Email,
                     Telephone = client.Telephone
                 };
-
-
+               
             }
         }
 
@@ -72,6 +81,7 @@ namespace CrackaSmile.ViewModels
         public async Task TakeListClients()//вызов клиентов
         {
             var result = await Api.GetListAsync<ClientApi[]>("Client");
+            clients = new List<ClientApi>(result);
             SignalChanged("clients");
         }
     }

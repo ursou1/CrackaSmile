@@ -10,7 +10,7 @@
         Width="1200" WindowStartupLocation="CenterScreen"
         Style="{StaticResource CustomWindowStyle}">
     <Grid>
-        <StackPanel  >
+        <StackPanel DataContext="{Binding AddClient}" >
             <Label Content="Добавить нового клиента:" FontSize="22" HorizontalAlignment="Center" Margin="50 50 0 0" FontWeight="Bold"/>
 
             <Label Content="Name:" FontSize="20" HorizontalAlignment="Center" Margin="0 5 0 5"/>
