@@ -25,19 +25,11 @@ namespace CrackaSmile.ViewModels
 
         public EditClientViewModel(ClientApi client)
         {
-            TakeListClients();
+            Task.Run(TakeListClients);
 
             if (client == null)
             {
-                AddClient = new ClientApi
-                {
-                    Name = "Name",
-                    FatherName = "FatherName",
-                    LastName = "NaLastNameme",
-                    Address = "Address",
-                    Email = "Email",
-                    Telephone = "Telephone"
-                };
+                AddClient = new ClientApi();
             }
             else
             {
@@ -51,39 +43,25 @@ namespace CrackaSmile.ViewModels
                     Email = client.Email,
                     Telephone = client.Telephone
                 };
-
-                Save = new CustomCommand(() =>
-                {
-                    if (AddClient.Id != 0)
-                    {
-                        EditClient();
-                    }
-                    else
-                    {
-                        CreateNewClient();
-                    }
-                    foreach (Window window in Application.Current.Windows)
-                    {
-                        if (window.DataContext == this) CloseWin(window);
-                    }
-                });
             }
-        }
 
+            Save = new CustomCommand(() =>
+            {
+                if (AddClient.Id == 0)
+                    Task.Run(CreateNewClient);
+                else
+                    Task.Run(EditClient);
+
+                foreach (Window window in Application.Current.Windows)
+                {
+                    if (window.DataContext == this) CloseWin(window);
+                }
+            });
+        }
 
         public async Task CreateNewClient()
         {
-            ClientApi editClient = new ClientApi
-            {
-                Name = AddClient.Name,
-                FatherName = AddClient.FatherName,
-                LastName = AddClient.LastName,
-                Address = AddClient.Address,
-                Email = AddClient.Email,
-                Telephone = AddClient.Telephone
-
-            };
-            await Api.PostAsync<ClientApi>(editClient, "Client");
+            await Api.PostAsync<ClientApi>(AddClient, "Client");
         }
 
         public async Task EditClient()

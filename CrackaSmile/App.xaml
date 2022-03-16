@@ -7,7 +7,12 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Themes/ColourfulLightTheme.xaml"/>
+                <ResourceDictionary Source="Themes/Button.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>
+    
+    
+    
+    
 </Application>

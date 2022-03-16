@@ -11,22 +11,56 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="100"/>
-            <RowDefinition Height="100"/>
             <RowDefinition />
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <WrapPanel VerticalAlignment="Center" >
-            <TextBox x:Name="txtSearchById" Text="Поиск по Производителю" Width="200" Height="35" Margin="50 0 30 0" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="15" Foreground="Brown"/>
-            <TextBox x:Name="txtSearchByName" Text="Поиск по названию" Width="200" Height="35" Margin="30 0" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"  FontSize="15" Foreground="Brown"/>
-        </WrapPanel>
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            
+                <StackPanel Orientation="Horizontal">
+                    <StackPanel>
+                        <Label Content="Поиск:"/>
+                        <TextBox Width="200" Grid.Row="1" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"/>
+                    </StackPanel>
+                    <StackPanel>
+                        <Label Grid.Column="1" Content="Критерий поиска:"/>
+                        <ComboBox Width="200" Grid.Row="1" Grid.Column="1" ItemsSource="{Binding SearchType}" SelectedItem="{Binding SelectedSearchType}"/>
+                    </StackPanel>
+                </StackPanel>
+            <StackPanel Grid.Column="1" HorizontalAlignment="Left">
+                <Label Content="Фильтрация по типу"/>
+                <ComboBox Width="200" DisplayMemberPath="Title" ItemsSource="{Binding MaterialTypeFilter}" SelectedItem="{Binding SelectedMaterialTypeFilter}"/>
+            </StackPanel>
+            <StackPanel Grid.Column="2" Orientation="Horizontal">
+                <StackPanel  HorizontalAlignment="Left">
+                    <Label Content="Сортировка по типу"/>
+                    <ComboBox Width="200" ItemsSource="{Binding SortTypes}" SelectedItem="{Binding SelectedSortType}"/>
+                </StackPanel>
+            </StackPanel>
 
-        <WrapPanel Grid.Row="1" VerticalAlignment="Center">
-            <TextBlock Text="Сортировать по:" Margin="118 0 20 0" FontSize="16" VerticalAlignment="Center"/>
-            <ComboBox x:Name="cmbSorting" Width="200" Height="35" Margin="30 0" VerticalAlignment="Center" VerticalContentAlignment="Center" FontSize="15" Foreground="Brown"/>
-            <Button  Command="{Binding AddClient}" Content="Добавить товар" Width="170" Height="35" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="18"/>
-        </WrapPanel>
+        </Grid>
+            
+        <!--<StackPanel Grid.Row="0" Orientation="Horizontal">
+                <StackPanel Grid.Column="0">
+                <Label Content="Поиск:"/>
+                <TextBox Width="200" Grid.Row="1" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"/>
+            </StackPanel>
+                <StackPanel Grid.Column="1">
+                <Label Grid.Column="1" Content="Критерий поиска:"/>
+                <ComboBox Width="200" Grid.Row="1" Grid.Column="1" ItemsSource="{Binding SearchType}" SelectedItem="{Binding SelectedSearchType}"/>
+            </StackPanel>
+                <StackPanel Grid.Column="2">
+                <Button  Command="{Binding AddClient}" Content="Добавить товар" Width="170" Height="35" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="18" Cursor="Hand"/>
+            </StackPanel>
+        </StackPanel>-->
 
-        <ListBox Grid.Row="2" ItemsSource="{Binding clients}" Name="list" SelectedItem="{Binding SelectedClient}" HorizontalContentAlignment="Stretch" SelectionMode="Extended">
+        
+        <ListBox Grid.Row="1" ItemsSource="{Binding clients}" Name="list" SelectedItem="{Binding SelectedClient}" HorizontalContentAlignment="Stretch" SelectionMode="Extended">
             <ListBox.ItemTemplate>
                 <DataTemplate >
                     <Grid>
@@ -86,5 +120,19 @@
                 </ContextMenu>
             </ListBox.ContextMenu>
         </ListBox>
+        
+        <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="3 5 3 3">
+            <Label Content="{Binding SearchCountRows}"/>
+            <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button Content="&lt;" Width="20" Command="{Binding BackPage}"/>
+                <Label Content="{Binding Pages}"/>
+                <Button Content=">" Width="20" Command="{Binding ForwardPage}"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Grid.Column="2" HorizontalAlignment="Right">
+                <Label Content="Кол-во записей на странице:"/>
+                <ComboBox Width="200" ItemsSource="{Binding ViewCountRows}" SelectedItem="{Binding SelectedViewCountRows}"/>
+                <Button Content="Создать материал" Command="{Binding AddMaterial}"/>
+            </StackPanel>
+        </StackPanel>
     </Grid>
 </Page>

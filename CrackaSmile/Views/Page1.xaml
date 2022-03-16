@@ -9,7 +9,10 @@
       Title="Page1">
 
     <Grid>
-        <TextBlock Text="aboba"/>
-        <Button Content="123" Height="100" Width="200"/>
+        
+        <StackPanel  Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <TextBlock Text="Приложение " FontSize="25" FontFamily="DFKai-SB"  Margin="0,0,0,200"/>
+        </StackPanel>
+        
     </Grid>
 </Page>

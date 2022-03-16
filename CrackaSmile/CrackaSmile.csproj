@@ -7,14 +7,23 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Images\logo.jpg" />
+    <None Remove="Images\logo1.jpg" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Reference Include="ModelsApi">
       <HintPath>..\..\AForcedSmile\ModelsApi\bin\Debug\net5.0\ModelsApi.dll</HintPath>
     </Reference>
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Themes\" />
-    <Folder Include="Images\" />
+    <Resource Include="Images\logo.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\logo1.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
 
 </Project>
