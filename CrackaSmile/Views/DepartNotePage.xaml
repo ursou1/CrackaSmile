@@ -1,0 +1,51 @@
+﻿<Window x:Class="CrackaSmile.Views.DepartNotePage"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:CrackaSmile.Views"
+        mc:Ignorable="d"
+        Title="DepartNotePage" Height="450" Width="800">
+    
+    <Grid >
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="310"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+
+        <StackPanel Grid.Row="1" Grid.Column="0">
+
+            <!--поиск-->
+            <TextBlock  Text="Поиск"/>
+            <TextBox  Margin="2" Text="{Binding EmployeesFilter, UpdateSourceTrigger=PropertyChanged}"/>
+            <!--поиск-->
+
+            <TextBlock Text="Номер накладной" Margin="2,4,2,4"/>
+            <TextBox Text="{Binding SelectedDepartNote.Number}" Margin="2,4,2,4"/>
+
+            <TextBlock Text="Клиент" Margin="2,4,2,4"/>
+            <ComboBox  ItemsSource="{Binding Clients}" SelectedItem="{Binding SelectedDepartNote.Clients}" DisplayMemberPath="FullName" Margin="2" IsEditable="True"/>
+
+            <TextBlock Text="Дата" Margin="2,4,2,4"/>
+            <TextBox Text="{Binding SelectedDepartNote.DepartDate}" Margin="2,4,2,4"/>
+
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Bottom">
+            <Button Content="Добавить" Padding="5" Margin="5" Command="{Binding AddDepartNakl}"/>
+            <Button Content="Сохранить" Padding="5" Margin="5" Command="{Binding SaveDepartNakl}"/>
+            <Button Content="Просмотреть" Padding="5" Margin="5" Command="{Binding CheckDepartNakl}"/>
+            <Button Content="Удалить" Padding="5" Margin="5" Command="{Binding DeleteDepartNakl}"/>
+        </StackPanel>
+        <StackPanel Grid.Row="2" Grid.Column="1">
+            <ListView Grid.Column="1" ItemsSource="{Binding DepartNotes}" SelectedItem="{Binding SelectedDepartNote}"  Margin="2,0,2,0"  Height="1200">
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn Header="Номер" DisplayMemberBinding="{Binding Number}" Width="100"/>
+                        <GridViewColumn Header="Дата" DisplayMemberBinding="{Binding DepartDate}" Width="200"/>
+                        <GridViewColumn Header="Клиент" DisplayMemberBinding="{Binding Clients.FullName}" Width="200"/>
+                    </GridView>
+                </ListView.View>
+            </ListView>
+        </StackPanel>
+    </Grid>
+</Window>

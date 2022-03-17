@@ -33,6 +33,9 @@ namespace CrackaSmile.ViewModels
         #region commands
         public CustomCommand ProductPage { get; set; }
         public CustomCommand ClientPage { get; set; }
+        public CustomCommand ProviderPage { get; set; }
+        public CustomCommand DeliveryNotePage { get; set; }
+        public CustomCommand DepartNotePage { get; set; }
         #endregion
 
         public MainViewModel()
@@ -49,6 +52,24 @@ namespace CrackaSmile.ViewModels
             ClientPage = new CustomCommand(() =>
             {
                 CurrentPage = new ClientListPage();
+                SignalChanged("CurrentPage");
+            });
+
+            ProviderPage = new CustomCommand(() =>
+            {
+                CurrentPage = new ProviderListPage();
+                SignalChanged("CurrentPage");
+            });
+
+            DeliveryNotePage = new CustomCommand(() =>
+            {
+                CurrentPage = new DeliveryNotePage();
+                SignalChanged("CurrentPage");
+            });
+
+            DepartNotePage = new CustomCommand(() =>
+            {
+                CurrentPage = new DepartNotePage();
                 SignalChanged("CurrentPage");
             });
         }

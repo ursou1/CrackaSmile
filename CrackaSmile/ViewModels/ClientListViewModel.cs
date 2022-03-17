@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace CrackaSmile.ViewModels
 {
@@ -108,6 +109,7 @@ namespace CrackaSmile.ViewModels
         #region Commands
         public CustomCommand AddClient { get; set; }
         public CustomCommand EditClient { get; set; }
+        public CustomCommand DeleteClient { get; set; }
 
         public CustomCommand BackPage { get; set; }
         public CustomCommand ForwardPage { get; set; }
@@ -128,6 +130,7 @@ namespace CrackaSmile.ViewModels
 
             Task.Run(LoadEntities);
 
+            #region команды по работе с записями
             AddClient = new CustomCommand(()=>
             {
                 EditClientWin editClient = new EditClientWin();
@@ -141,8 +144,27 @@ namespace CrackaSmile.ViewModels
                 editClient.ShowDialog();
             });
 
+            DeleteClient = new CustomCommand(() =>
+            {
+                MessageBoxResult result = MessageBox.Show("Удалить клиента?", "Подтвердите действие", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                if (result == MessageBoxResult.Yes)
+                {
+                    try
+                    {
+                        Task.Run(DeleteClientMethod);
+                    }
+                    catch (Exception e)
+                    {
+
+                        MessageBox.Show(e.Message);
+                    }
+                }
+                else return;
+            });
+            #endregion
+
             #region странички
-            
+
             BackPage = new CustomCommand(() =>
             {
                 if (searchResult == null)
@@ -169,9 +191,9 @@ namespace CrackaSmile.ViewModels
 
             });
             #endregion
-            
-            InitPagination();
-            Pagination();
+            //searchResult
+            //InitPagination();
+            //Pagination();
         }
         #endregion
 
@@ -212,6 +234,11 @@ namespace CrackaSmile.ViewModels
             searchResult = new List<ClientApi>(result);
         }
 
+        public async Task DeleteClientMethod()
+        {
+            await Api.DeleteAsync<ClientApi>(selectedClient,"Client");
+        }
+
         public async Task LoadEntities()
         {
             var result = await Api.GetListAsync<ClientApi[]>("Client");
@@ -220,7 +247,7 @@ namespace CrackaSmile.ViewModels
 
         private void InitPagination()
         {
-            SearchCountRows = $"Найдено записей: {searchResult.Count}";
+            SearchCountRows = $"Найдено записей: {searchResult.Count} из ";
             paginationPageIndex = 0;
         }
 
