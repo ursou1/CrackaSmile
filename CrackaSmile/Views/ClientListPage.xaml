@@ -69,46 +69,41 @@
                             <ColumnDefinition />
                             <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
-                        <Image Source="{Binding Image}" Width="100" Height="100" Grid.Column="0" HorizontalAlignment="Left"/>
+                        <!--<Image Source="{Binding Image}" Width="100" Height="100" Grid.Column="0" HorizontalAlignment="Left"/>-->
                         <StackPanel Grid.Column="1" Orientation="Vertical" HorizontalAlignment="Left">
                             <StackPanel Orientation="Horizontal">
-                                <Label Content="Наименование:"/>
-                                <Label Content="{Binding Product.ProductName}"/>
-                                <Label Content="|"/>
+                                <Label Content="Имя:"/>
                                 <Label Content="{Binding Name}"/>
-                            </StackPanel>
-
-                            <StackPanel Orientation="Horizontal">
-                                <Label Content="Номер секции:"/>
+                                <Label Content="|"/>
+                                <Label Content="Фамилия:"/>
                                 <Label Content="{Binding LastName}"/>
-                            </StackPanel>
-
-                            <StackPanel Orientation="Horizontal">
-                                <Label Content="Категория:"/>
+                                <Label Content="|"/>
+                                <Label Content="Отчество:"/>
                                 <Label Content="{Binding FatherName}"/>
                             </StackPanel>
 
                             <StackPanel Orientation="Horizontal">
-                                <Label Content="Производитель:"/>
-                                <Label Content="{Binding NameManufacturer}"/>
+                                <Label Content="Телефон:"/>
+                                <Label Content="{Binding Telephone}"/>
                             </StackPanel>
 
                             <StackPanel Orientation="Horizontal">
-                                <Label Content="Цена:"/>
-                                <Label Content="{Binding WholesalePrice}"/>
+                                <Label Content="Адрес:"/>
+                                <Label Content="{Binding Address}"/>
                             </StackPanel>
 
-                            <StackPanel Orientation="Horizontal" >
-                                <Label Content="Поставщик: "/>
-                                <Label Content="{Binding Provider.NameProvider}"/>
+                            <StackPanel Orientation="Horizontal">
+                                <Label Content="Почта:"/>
+                                <Label Content="{Binding Email}"/>
                             </StackPanel>
+
                         </StackPanel>
 
-                        <StackPanel Orientation="Horizontal" Grid.Column="2" HorizontalAlignment="Right">
+                        <!--<StackPanel Orientation="Horizontal" Grid.Column="2" HorizontalAlignment="Right">
                             <Label Content="На складе: "/>
                             <Label Content="{Binding InStock}"/>
                             <Label Content="{Binding Unit.NameUnit}"/>
-                        </StackPanel>
+                        </StackPanel>-->
 
                     </Grid>
 
@@ -117,6 +112,7 @@
             <ListBox.ContextMenu>
                 <ContextMenu>
                     <MenuItem Header="Редактировать" Command="{Binding EditClient}" Padding="5"/>
+                    <MenuItem Header="Удалить" Command="{Binding DeleteClient}" Padding="5"/>
                 </ContextMenu>
             </ListBox.ContextMenu>
         </ListBox>
@@ -131,7 +127,7 @@
             <StackPanel Orientation="Horizontal" Grid.Column="2" HorizontalAlignment="Right">
                 <Label Content="Кол-во записей на странице:" Margin="4"/>
                 <ComboBox Width="200" ItemsSource="{Binding ViewCountRows}" SelectedItem="{Binding SelectedViewCountRows}" Margin="4"/>
-                <Button Content="Создать материал" Command="{Binding AddMaterial}" Margin="4"/>
+                <Button Content="Добавить" Command="{Binding AddClient}" Margin="4" Cursor="Hand"/>
             </StackPanel>
         </StackPanel>
     </Grid>

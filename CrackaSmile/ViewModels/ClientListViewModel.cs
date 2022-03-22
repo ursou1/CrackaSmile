@@ -23,6 +23,7 @@ namespace CrackaSmile.ViewModels
                 SignalChanged();
             }
         }
+        public List<ClientApi> mysearch { get; set; }
         public List<ClientApi> clients { get; set; }
         public List<ClientApi> Clients
         {
@@ -59,7 +60,7 @@ namespace CrackaSmile.ViewModels
             set
             {
                 searchText = value;
-                //Search();
+                Search();
             }
         }
         public List<string> SortTypes { get; set; }
@@ -81,7 +82,7 @@ namespace CrackaSmile.ViewModels
             set
             {
                 selectedSearchType = value;
-                //Search();
+                Search();
             }
         }
         public List<string> ViewCountRows { get; set; }
@@ -127,6 +128,10 @@ namespace CrackaSmile.ViewModels
             SearchType = new List<string>();
             SearchType.AddRange(new string[] { "Наименование" });
             selectedSearchType = SearchType.First();
+
+            SortTypes = new List<string>();
+            SortTypes.AddRange(new string[] { "По умолчанию", "По алфавиту: А-Я", "По алфавиту: Я-А" });
+            selectedSortType = SortTypes.First();
 
             Task.Run(LoadEntities);
 
@@ -199,31 +204,32 @@ namespace CrackaSmile.ViewModels
 
         internal void Sort()
         {
-            //if (SelectedOrderType == "По умолчанию")
-            //    return;
 
-            //if (SelectedOrderType == "По убыванию")
-            //{
-            //    if (SelectedSortType == "Наименование")
-            //        searchResult.Sort((x, y) => y.Title.CompareTo(x.Title));
-            //    else if (SelectedSortType == "Остаток")
-            //        searchResult.Sort((x, y) => ((Int32)y.CountInStock).CompareTo((Int32)x.CountInStock));
-            //    else if (SelectedSortType == "Стоимость")
-            //        searchResult.Sort((x, y) => y.Cost.CompareTo(x.Cost));
-            //}
+            if (SelectedSortType == "По умолчанию")
+                return;
+            else if (SelectedSortType == "По алфавиту: А-Я")
+                searchResult.Sort((x, y) => x.Name.CompareTo(y.Name));
+            else if (SelectedSortType == "По алфавиту: Я-А")
+                searchResult.Sort((x, y) => y.Name.CompareTo(x.Name));
 
-            //if (SelectedOrderType == "По возрастанию")
-            //{
-            //    if (SelectedSortType == "Наименование")
-            //        searchResult.Sort((x, y) => x.Title.CompareTo(y.Title));
-            //    else if (SelectedSortType == "Остаток")
-            //        searchResult.Sort((x, y) => ((Int32)x.CountInStock).CompareTo((Int32)y.CountInStock));
-            //    else if (SelectedSortType == "Стоимость")
-            //        searchResult.Sort((x, y) => x.Cost.CompareTo(y.Cost));
-            //}
             paginationPageIndex = 0;
             Pagination();
 
+        }
+
+        private void Search()
+        {
+            var search = SearchText.ToLower();
+            Task.Run(LoadEntities);
+            searchResult = mysearch.Where(c => c.Name.ToLower().Contains(search) ||
+            c.LastName.ToLower().Contains(search) ||
+            c.FatherName.ToLower().Contains(search) ||
+            c.Address.ToLower().Contains(search) ||
+            c.Email.ToLower().Contains(search)).ToList();
+
+            //Sort();
+            InitPagination();
+            Pagination();
         }
 
         public async Task TakeListClients()
@@ -242,7 +248,7 @@ namespace CrackaSmile.ViewModels
         public async Task LoadEntities()
         {
             var result = await Api.GetListAsync<ClientApi[]>("Client");
-            searchResult = new List<ClientApi>(result);
+            mysearch = new List<ClientApi>(result);
         }
 
         private void InitPagination()
