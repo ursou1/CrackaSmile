@@ -1,4 +1,5 @@
 ﻿using CrackaSmile.ViewModels;
+using ModelsApi;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,7 +24,12 @@ namespace CrackaSmile.Views
         public EditProviderWin()
         {
             InitializeComponent();
-            DataContext = new EditProviderViewModel();
+            DataContext = new EditProviderViewModel(null);
+        }
+        public EditProviderWin(ProviderApi provider)
+        {
+            InitializeComponent();
+            DataContext = new EditProviderViewModel(provider);
         }
     }
 }

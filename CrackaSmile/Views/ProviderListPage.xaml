@@ -60,7 +60,7 @@
         </StackPanel>-->
 
 
-        <ListBox Grid.Row="1" ItemsSource="{Binding clients}" Name="list" SelectedItem="{Binding SelectedClient}" HorizontalContentAlignment="Stretch" SelectionMode="Extended">
+        <ListBox Grid.Row="1" ItemsSource="{Binding providers}" Name="list" SelectedItem="{Binding SelectedProvider}" HorizontalContentAlignment="Stretch" SelectionMode="Extended">
             <ListBox.ItemTemplate>
                 <DataTemplate >
                     <Grid>
@@ -69,46 +69,30 @@
                             <ColumnDefinition />
                             <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
-                        <Image Source="{Binding Image}" Width="100" Height="100" Grid.Column="0" HorizontalAlignment="Left"/>
+                        <!--<Image Source="{Binding Image}" Width="100" Height="100" Grid.Column="0" HorizontalAlignment="Left"/>-->
                         <StackPanel Grid.Column="1" Orientation="Vertical" HorizontalAlignment="Left">
                             <StackPanel Orientation="Horizontal">
-                                <Label Content="Наименование:"/>
-                                <Label Content="{Binding Product.ProductName}"/>
-                                <Label Content="|"/>
+                                <Label Content="Имя:"/>
                                 <Label Content="{Binding Name}"/>
                             </StackPanel>
 
                             <StackPanel Orientation="Horizontal">
-                                <Label Content="Номер секции:"/>
-                                <Label Content="{Binding LastName}"/>
+                                <Label Content="Телефон:"/>
+                                <Label Content="{Binding Telephone}"/>
                             </StackPanel>
 
                             <StackPanel Orientation="Horizontal">
-                                <Label Content="Категория:"/>
-                                <Label Content="{Binding FatherName}"/>
+                                <Label Content="Почта:"/>
+                                <Label Content="{Binding Email}"/>
                             </StackPanel>
 
-                            <StackPanel Orientation="Horizontal">
-                                <Label Content="Производитель:"/>
-                                <Label Content="{Binding NameManufacturer}"/>
-                            </StackPanel>
-
-                            <StackPanel Orientation="Horizontal">
-                                <Label Content="Цена:"/>
-                                <Label Content="{Binding WholesalePrice}"/>
-                            </StackPanel>
-
-                            <StackPanel Orientation="Horizontal" >
-                                <Label Content="Поставщик: "/>
-                                <Label Content="{Binding Provider.NameProvider}"/>
-                            </StackPanel>
                         </StackPanel>
 
-                        <StackPanel Orientation="Horizontal" Grid.Column="2" HorizontalAlignment="Right">
+                        <!--<StackPanel Orientation="Horizontal" Grid.Column="2" HorizontalAlignment="Right">
                             <Label Content="На складе: "/>
                             <Label Content="{Binding InStock}"/>
                             <Label Content="{Binding Unit.NameUnit}"/>
-                        </StackPanel>
+                        </StackPanel>-->
 
                     </Grid>
 
@@ -116,7 +100,8 @@
             </ListBox.ItemTemplate>
             <ListBox.ContextMenu>
                 <ContextMenu>
-                    <MenuItem Header="Редактировать" Command="{Binding EditClient}" Padding="5"/>
+                    <MenuItem Header="Редактировать" Command="{Binding EditProvider}" Padding="5"/>
+                    <MenuItem Header="Удалить" Command="{Binding DeleteProvider}" Padding="5"/>
                 </ContextMenu>
             </ListBox.ContextMenu>
         </ListBox>

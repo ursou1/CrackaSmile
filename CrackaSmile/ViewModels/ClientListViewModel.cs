@@ -119,7 +119,12 @@ namespace CrackaSmile.ViewModels
         #region ctor
         public ClientListViewModel()
         {
-            Task.Run(TakeListClients);
+            Task.Run(TakeListClients).ContinueWith(s =>
+            {
+                InitPagination();
+                Pagination();
+
+            });
 
             ViewCountRows = new List<string>();
             ViewCountRows.AddRange(new string[] { "15", "все" });
@@ -136,6 +141,8 @@ namespace CrackaSmile.ViewModels
             Task.Run(LoadEntities);
 
             #region команды по работе с записями
+
+
             AddClient = new CustomCommand(()=>
             {
                 EditClientWin editClient = new EditClientWin();
@@ -201,6 +208,8 @@ namespace CrackaSmile.ViewModels
             //Pagination();
         }
         #endregion
+
+        
 
         internal void Sort()
         {

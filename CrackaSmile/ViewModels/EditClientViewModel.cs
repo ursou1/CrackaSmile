@@ -11,10 +11,10 @@ namespace CrackaSmile.ViewModels
 {
     public class EditClientViewModel: BaseViewModel
     {
-        public ClientApi AddClient { get; set; }
+        ClientListViewModel cl = new ClientListViewModel();
 
         #region par
-        
+        public ClientApi AddClient { get; set; }
         public List<ClientApi> clients { get; set; }
         #endregion
 
@@ -52,10 +52,12 @@ namespace CrackaSmile.ViewModels
                 else
                     Task.Run(EditClient);
 
+                
                 foreach (Window window in Application.Current.Windows)
                 {
                     if (window.DataContext == this) CloseWin(window);
                 }
+                
             });
         }
 
