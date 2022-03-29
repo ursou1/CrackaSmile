@@ -11,8 +11,6 @@ namespace CrackaSmile.ViewModels
 {
     public class EditClientViewModel: BaseViewModel
     {
-        ClientListViewModel cl = new ClientListViewModel();
-
         #region par
         public ClientApi AddClient { get; set; }
         public List<ClientApi> clients { get; set; }

@@ -72,18 +72,18 @@
                         <!--<Image Source="{Binding Image}" Width="100" Height="100" Grid.Column="0" HorizontalAlignment="Left"/>-->
                         <StackPanel Grid.Column="1" Orientation="Vertical" HorizontalAlignment="Left">
                             <StackPanel Orientation="Horizontal">
-                                <Label Content="Имя:"/>
-                                <Label Content="{Binding Name}"/>
+                                <Label Content="Номер:"/>
+                                <Label Content="{Binding Number}"/>
                             </StackPanel>
 
                             <StackPanel Orientation="Horizontal">
-                                <Label Content="Телефон:"/>
-                                <Label Content="{Binding Telephone}"/>
+                                <Label Content="Дата:"/>
+                                <Label Content="{Binding DeliveryDate}"/>
                             </StackPanel>
 
                             <StackPanel Orientation="Horizontal">
-                                <Label Content="Почта:"/>
-                                <Label Content="{Binding Email}"/>
+                                <Label Content="Поставщик:"/>
+                                <Label Content="{Binding DeliveryNote.ProviderName}"/>
                             </StackPanel>
 
                         </StackPanel>
@@ -100,8 +100,8 @@
             </ListBox.ItemTemplate>
             <ListBox.ContextMenu>
                 <ContextMenu>
-                    <MenuItem Header="Редактировать" Command="{Binding EditProvider}" Padding="5"/>
-                    <MenuItem Header="Удалить" Command="{Binding DeleteProvider}" Padding="5"/>
+                    <MenuItem Header="Редактировать" Command="{Binding EditDeliveryNote}" Padding="5"/>
+                    <MenuItem Header="Удалить" Command="{Binding DeleteDeliveryNote}" Padding="5"/>
                 </ContextMenu>
             </ListBox.ContextMenu>
         </ListBox>
@@ -116,7 +116,7 @@
             <StackPanel Orientation="Horizontal" Grid.Column="2" HorizontalAlignment="Right">
                 <Label Content="Кол-во записей на странице:" Margin="4"/>
                 <ComboBox Width="200" ItemsSource="{Binding ViewCountRows}" SelectedItem="{Binding SelectedViewCountRows}" Margin="4"/>
-                <Button Content="Создать материал" Command="{Binding AddMaterial}" Margin="4"/>
+                <Button Content="Создать накладную" Command="{Binding AddDeliveryNote}" Margin="4"/>
             </StackPanel>
         </StackPanel>
     </Grid>

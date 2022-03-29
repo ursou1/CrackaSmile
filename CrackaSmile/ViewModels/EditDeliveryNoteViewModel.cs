@@ -14,6 +14,7 @@ namespace CrackaSmile.ViewModels
         #region par
         public DeliveryNoteApi AddDeliveryNote { get; set; }
         public List<DeliveryNoteApi> deliveryNotes { get; set; }
+        public List<ProviderApi> providers { get; set; }
         #endregion
 
         #region commands
@@ -23,6 +24,8 @@ namespace CrackaSmile.ViewModels
         public EditDeliveryNoteViewModel(DeliveryNoteApi deliveryNote)
         {
             Task.Run(TakeListDeliveryNotes);
+            Task.Run(TakeListProviders);
+
             if (deliveryNote == null)
             {
                 AddDeliveryNote = new DeliveryNoteApi();
@@ -34,7 +37,8 @@ namespace CrackaSmile.ViewModels
                     Id = deliveryNote.Id,
                     Number = deliveryNote.Number,
                     DeliveryDate = deliveryNote.DeliveryDate,
-                    ProviderId = deliveryNote.ProviderId
+                   // ProviderId = providers.;
+                  // ProviderId = deliveryNote.
                 };
             }
 
@@ -68,6 +72,12 @@ namespace CrackaSmile.ViewModels
             var result = await Api.GetListAsync<DeliveryNoteApi[]>("DeliveryNote");
             deliveryNotes = new List<DeliveryNoteApi>(result);
             SignalChanged("deliveryNotes");
+        }
+        public async Task TakeListProviders()
+        {
+            var result = await Api.GetListAsync<ProviderApi[]>("Provider");
+            providers = new List<ProviderApi>(result);
+            SignalChanged("providers");
         }
         public void CloseWin(object obj)
         {
