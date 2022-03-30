@@ -244,7 +244,7 @@ namespace CrackaSmile.ViewModels
             deliveryNotes = new List<DeliveryNoteApi>(result);
             SignalChanged("deliveryNotes");
             searchResult = new List<DeliveryNoteApi>(result);
-
+            
             var result1 = await Api.GetListAsync<ProviderApi[]>("Provider");
             providers = new List<ProviderApi>(result1);
             SignalChanged("providers");
@@ -252,7 +252,9 @@ namespace CrackaSmile.ViewModels
             {
                 deliveryNote.Provider = providers.First(s => s.Id == deliveryNote.ProviderId);
             }
+           
         }
+
 
         public async Task DeleteDeliveryNoteMethod()
         {
@@ -263,6 +265,14 @@ namespace CrackaSmile.ViewModels
         {
             var result = await Api.GetListAsync<DeliveryNoteApi[]>("DeliveryNote");
             mysearch = new List<DeliveryNoteApi>(result);
+            deliveryNotes = new List<DeliveryNoteApi>(result);
+            var result1 = await Api.GetListAsync<ProviderApi[]>("Provider");
+            providers = new List<ProviderApi>(result1);
+            SignalChanged("providers");
+            foreach (var deliveryNote in deliveryNotes)
+            {
+                deliveryNote.Provider = providers.First(s => s.Id == deliveryNote.ProviderId);
+            }
         }
 
         private void InitPagination()

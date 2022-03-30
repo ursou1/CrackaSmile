@@ -21,7 +21,7 @@
 
             <Label Content="Поставщик:" FontSize="20" HorizontalAlignment="Center" Margin="0 5 0 5"/>
         </StackPanel>
-        <ComboBox  ItemsSource="{Binding providers}" SelectedItem="{Binding Provider.Name}" Width="200" Height="40" FontSize="20" DisplayMemberPath="Name" Margin="2" IsEditable="True"/>
+        <ComboBox  ItemsSource="{Binding providers}" SelectedItem="{Binding SelectedProvider}" Width="200" Height="40" FontSize="20" DisplayMemberPath="Name" Margin="2" IsEditable="True"/>
         <Button Command="{Binding Save}" Margin="0 0 195 30" Content="Сохранить поставщика" Width="170" Height="35"  VerticalContentAlignment="Center"  FontSize="18" VerticalAlignment="Bottom" HorizontalAlignment="Right" Cursor="Hand" />
     </Grid>
 </Window>
