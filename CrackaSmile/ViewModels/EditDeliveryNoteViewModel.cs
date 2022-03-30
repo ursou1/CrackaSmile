@@ -24,7 +24,6 @@ namespace CrackaSmile.ViewModels
         public EditDeliveryNoteViewModel(DeliveryNoteApi deliveryNote)
         {
             Task.Run(TakeListDeliveryNotes);
-            Task.Run(TakeListProviders);
 
             if (deliveryNote == null)
             {
@@ -37,10 +36,14 @@ namespace CrackaSmile.ViewModels
                     Id = deliveryNote.Id,
                     Number = deliveryNote.Number,
                     DeliveryDate = deliveryNote.DeliveryDate,
-                   // ProviderId = providers.;
-                  // ProviderId = deliveryNote.
                 };
+                //foreach (var p in providers)
+                //{
+                //    deliveryNote.Provider = providers.First(s => s.Id == deliveryNote.ProviderId);
+                //}
+
             }
+
 
             Save = new CustomCommand(() =>
             {
@@ -72,13 +75,13 @@ namespace CrackaSmile.ViewModels
             var result = await Api.GetListAsync<DeliveryNoteApi[]>("DeliveryNote");
             deliveryNotes = new List<DeliveryNoteApi>(result);
             SignalChanged("deliveryNotes");
+
+            //var result1 = await Api.GetListAsync<ProviderApi[]>("Provider");
+            //providers = new List<ProviderApi>(result1);
+            //SignalChanged("providers");
         }
-        public async Task TakeListProviders()
-        {
-            var result = await Api.GetListAsync<ProviderApi[]>("Provider");
-            providers = new List<ProviderApi>(result);
-            SignalChanged("providers");
-        }
+            
+        
         public void CloseWin(object obj)
         {
             Window win = obj as Window;

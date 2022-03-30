@@ -15,6 +15,8 @@ namespace CrackaSmile.ViewModels
 
         #region properties
 
+        public List<ProviderApi> providers { get; set; }
+
         public DeliveryNoteApi selectedDeliveryNote;
         public DeliveryNoteApi SelectedDeliveryNote
         {
@@ -242,6 +244,14 @@ namespace CrackaSmile.ViewModels
             deliveryNotes = new List<DeliveryNoteApi>(result);
             SignalChanged("deliveryNotes");
             searchResult = new List<DeliveryNoteApi>(result);
+
+            var result1 = await Api.GetListAsync<ProviderApi[]>("Provider");
+            providers = new List<ProviderApi>(result1);
+            SignalChanged("providers");
+            foreach (var deliveryNote in deliveryNotes)
+            {
+                deliveryNote.Provider = providers.First(s => s.Id == deliveryNote.ProviderId);
+            }
         }
 
         public async Task DeleteDeliveryNoteMethod()

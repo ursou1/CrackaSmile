@@ -83,7 +83,7 @@
 
                             <StackPanel Orientation="Horizontal">
                                 <Label Content="Поставщик:"/>
-                                <Label Content="{Binding DeliveryNote.ProviderName}"/>
+                                <Label Content="{Binding Provider.Name}"/>
                             </StackPanel>
 
                         </StackPanel>
