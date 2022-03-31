@@ -128,6 +128,7 @@ namespace CrackaSmile.ViewModels
         {
             Task.Run(TakeListDeliveryNotes).ContinueWith(s =>
             {
+                Task.Run(TakeListProviders);
                 InitPagination();
                 Pagination();
             });
@@ -232,9 +233,10 @@ namespace CrackaSmile.ViewModels
             var search = SearchText.ToLower();
             Task.Run(LoadEntities);
             searchResult = mysearch.Where(c => c.Number.ToString().Contains(search) ||
-            c.DeliveryDate.ToString().Contains(search)).ToList();
+            c.DeliveryDate.ToString().Contains(search) ||
+            c.Provider.Name.ToLower().Contains(search)).ToList();
 
-            //Sort();
+            Sort();
             InitPagination();
             Pagination();
         }
@@ -255,6 +257,12 @@ namespace CrackaSmile.ViewModels
            
         }
 
+        public async Task TakeListProviders()
+        {
+            var result1 = await Api.GetListAsync<ProviderApi[]>("Provider");
+            providers = new List<ProviderApi>(result1);
+            SignalChanged("providers");
+        }
 
         public async Task DeleteDeliveryNoteMethod()
         {

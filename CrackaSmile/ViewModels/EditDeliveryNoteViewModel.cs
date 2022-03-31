@@ -40,6 +40,7 @@ namespace CrackaSmile.ViewModels
                 if (deliveryNote == null)
                 {
                     AddDeliveryNote = new DeliveryNoteApi();
+
                 }
                 else
                 {
@@ -79,6 +80,7 @@ namespace CrackaSmile.ViewModels
 
         public async Task EditDeliveryNote()
         {
+            AddDeliveryNote.ProviderId = selectedProvider.Id;
             await Api.PutAsync<DeliveryNoteApi>(AddDeliveryNote, "DeliveryNote");
         }
 
@@ -92,11 +94,11 @@ namespace CrackaSmile.ViewModels
             providers = new List<ProviderApi>(result1);
             SignalChanged("providers");
 
-            foreach (var deliveryNote1 in deliveryNotes)
-            {
-                deliveryNote1.Provider = providers.First(s => s.Id == deliveryNote1.ProviderId);
-                SelectedProvider = deliveryNote1.Provider;
-            }
+            //foreach (var deliveryNote1 in deliveryNotes)
+            //{
+            //    deliveryNote1.Provider = providers.First(s => s.Id == deliveryNote1.ProviderId);
+            //    SelectedProvider = deliveryNote1.Provider;
+            //}
         }
             
         
