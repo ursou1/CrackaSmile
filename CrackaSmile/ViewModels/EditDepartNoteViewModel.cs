@@ -12,7 +12,16 @@ namespace CrackaSmile.ViewModels
     public class EditDepartNoteViewModel: BaseViewModel
     {
         #region par
-        public DepartNoteApi AddDepartNote { get; set; }
+        private DepartNoteApi addDepartNote;
+        public DepartNoteApi AddDepartNote
+        {
+            get => addDepartNote;
+            set
+            {
+                addDepartNote = value;
+                SignalChanged();
+            }
+        }
         public List<DepartNoteApi> departNotes { get; set; }
         public List<ClientApi> clients { get; set; }
 
@@ -34,7 +43,7 @@ namespace CrackaSmile.ViewModels
 
         public EditDepartNoteViewModel(DepartNoteApi departNote)
         {
-            TakeListDepartNotes(departNote).ContinueWith(s=>
+            TakeListDepartNotes().ContinueWith(s=>
             {
                 if (departNote == null)
                 {
@@ -56,21 +65,12 @@ namespace CrackaSmile.ViewModels
             });
 
                 
-
-            
-
-
             Save = new CustomCommand(() =>
             {
                 if (AddDepartNote.Id == 0)
-                {
-
-                    SelectedClient.Id = AddDepartNote.ClientId;
                     Task.Run(CreateNewDepartNote);
-                }    
                 else
                     Task.Run(EditDepartNote);
-
 
                 foreach (Window window in Application.Current.Windows)
                 {
@@ -82,7 +82,7 @@ namespace CrackaSmile.ViewModels
 
         public async Task CreateNewDepartNote()
         {
-            SelectedClient.Id = AddDepartNote.ClientId;
+            AddDepartNote.ClientId = selectedClient.Id;
             await Api.PostAsync<DepartNoteApi>(AddDepartNote, "DepartNote");
         }
 
@@ -92,35 +92,36 @@ namespace CrackaSmile.ViewModels
             await Api.PutAsync<DepartNoteApi>(AddDepartNote, "DepartNote");
         }
 
-        //public async Task TakeListDepartNotes()
-        //{
-        //    var result = await Api.GetListAsync<DepartNoteApi[]>("DepartNote");
-        //    departNotes = new List<DepartNoteApi>(result);
-        //    SignalChanged("departNotes");
-
-        //    var result1 = await Api.GetListAsync<ClientApi[]>("Client");
-        //    clients = new List<ClientApi>(result1);
-        //    SignalChanged("clients");
-
-        //    //foreach (var deliveryNote1 in deliveryNotes)
-        //    //{
-        //    //    deliveryNote1.Provider = providers.First(s => s.Id == deliveryNote1.ProviderId);
-        //    //    SelectedProvider = deliveryNote1.Provider;
-        //    //}
-        //}
-        async Task TakeListDepartNotes(DepartNoteApi departNoteApi)
+        public async Task TakeListDepartNotes()
         {
-            departNotes = await Api.GetListAsync<List<DepartNoteApi>>("DepartNote");
-            clients = await Api.GetListAsync<List<ClientApi>>("Client");
-            if (departNoteApi == null)
-            {
-                SelectedClient = clients.FirstOrDefault();
-            }
-            else
-            {
-                SelectedClient = clients.FirstOrDefault(s => s.Id == departNoteApi.ClientId);
-            }
+            var result = await Api.GetListAsync<DepartNoteApi[]>("DepartNote");
+            departNotes = new List<DepartNoteApi>(result);
+            SignalChanged("departNotes");
+
+            var result1 = await Api.GetListAsync<ClientApi[]>("Client");
+            clients = new List<ClientApi>(result1);
+            SignalChanged("clients");
+
+            //foreach (var deliveryNote1 in deliveryNotes)
+            //{
+            //    deliveryNote1.Provider = providers.First(s => s.Id == deliveryNote1.ProviderId);
+            //    SelectedProvider = deliveryNote1.Provider;
+            //}
         }
+
+        //async Task TakeListDepartNotes(DepartNoteApi departNoteApi)
+        //{
+        //    departNotes = await Api.GetListAsync<List<DepartNoteApi>>("DepartNote");
+        //    clients = await Api.GetListAsync<List<ClientApi>>("Client");
+        //    if (departNoteApi == null)
+        //    {
+        //        SelectedClient = clients.FirstOrDefault();
+        //    }
+        //    else
+        //    {
+        //        SelectedClient = clients.FirstOrDefault(s => s.Id == departNoteApi.ClientId);
+        //    }
+        //}
 
         public void CloseWin(object obj)
         {
