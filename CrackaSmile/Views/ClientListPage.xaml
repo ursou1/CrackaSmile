@@ -128,7 +128,6 @@
                 <Label Content="Кол-во записей на странице:" Margin="4"/>
                 <ComboBox Width="200" ItemsSource="{Binding ViewCountRows}" SelectedItem="{Binding SelectedViewCountRows}" Margin="4"/>
                 <Button Content="Добавить" Command="{Binding AddClient}" Margin="4" Cursor="Hand"/>
-                <Button Content="MethodBut" Command="{Binding MethodBut}" Margin="4" Cursor="Hand"/>
             </StackPanel>
         </StackPanel>
     </Grid>

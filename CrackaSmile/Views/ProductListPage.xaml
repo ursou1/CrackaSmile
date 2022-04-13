@@ -11,22 +11,42 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="100"/>
-            <RowDefinition Height="100"/>
             <RowDefinition />
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <WrapPanel VerticalAlignment="Center" >
-            <TextBox x:Name="txtSearchById" Text="Поиск по Производителю" Width="200" Height="35" Margin="50 0 30 0" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="15" Foreground="Brown"/>
-            <TextBox x:Name="txtSearchByName" Text="Поиск по названию" Width="200" Height="35" Margin="30 0" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"  FontSize="15" Foreground="Brown"/>
-        </WrapPanel>
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
 
-        <WrapPanel Grid.Row="1" VerticalAlignment="Center">
-            <TextBlock Text="Сортировать по:" Margin="118 0 20 0" FontSize="16" VerticalAlignment="Center"/>
-            <ComboBox x:Name="cmbSorting" Width="200" Height="35" Margin="30 0" VerticalAlignment="Center" VerticalContentAlignment="Center" FontSize="15" Foreground="Brown"/>
-            <Button x:Name="btnAddProduct" Content="Добавить товар" Width="170" Height="35" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="18"/>
-        </WrapPanel>
+            <StackPanel Orientation="Horizontal">
+                <StackPanel Margin="4">
+                    <Label Content="Поиск:"/>
+                    <TextBox Width="200" Grid.Row="1" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"/>
+                </StackPanel>
+                <StackPanel Margin="4">
+                    <Label Grid.Column="1" Content="Критерий поиска:"/>
+                    <ComboBox Width="200" Grid.Row="1" Grid.Column="1" ItemsSource="{Binding SearchType}" SelectedItem="{Binding SelectedSearchType}"/>
+                </StackPanel>
+            </StackPanel>
+            <StackPanel Grid.Column="1" HorizontalAlignment="Left" Margin="4">
+                <Label Content="Фильтрация по типу"/>
+                <ComboBox Width="200" DisplayMemberPath="Title" ItemsSource="{Binding MaterialTypeFilter}" SelectedItem="{Binding SelectedMaterialTypeFilter}"/>
+            </StackPanel>
+            <StackPanel Grid.Column="2" Orientation="Horizontal" Margin="4">
+                <StackPanel  HorizontalAlignment="Left">
+                    <Label Content="Сортировка по типу"/>
+                    <ComboBox Width="200" ItemsSource="{Binding SortTypes}" SelectedItem="{Binding SelectedSortType}"/>
+                </StackPanel>
+            </StackPanel>
 
-        <ListBox Grid.Row="2" ItemsSource="{Binding Products}" Name="list" SelectedItem="{Binding SelectedProduct}" HorizontalContentAlignment="Stretch" SelectionMode="Extended">
+        </Grid>
+
+
+        <ListBox Grid.Row="1" ItemsSource="{Binding products}" Name="list" SelectedItem="{Binding SelectedProduct}" HorizontalContentAlignment="Stretch" SelectionMode="Extended">
             <ListBox.ItemTemplate>
                 <DataTemplate >
                     <Grid>
@@ -38,43 +58,32 @@
                         <Image Source="{Binding Image}" Width="100" Height="100" Grid.Column="0" HorizontalAlignment="Left"/>
                         <StackPanel Grid.Column="1" Orientation="Vertical" HorizontalAlignment="Left">
                             <StackPanel Orientation="Horizontal">
-                                <Label Content="Наименование:"/>
-                                <Label Content="{Binding Product.ProductName}"/>
+                                <Label Content="{Binding Code}"/>
                                 <Label Content="|"/>
-                                <Label Content="{Binding ProductName}"/>
+                                <Label Content="{Binding Name}"/>
                             </StackPanel>
-
                             <StackPanel Orientation="Horizontal">
-                                <Label Content="Номер секции:"/>
-                                <Label Content="{Binding Storage.NumberStorage}"/>
-                            </StackPanel>
-
-                            <StackPanel Orientation="Horizontal">
-                                <Label Content="Категория:"/>
-                                <Label Content="{Binding CategoryProduct.NameCategory}"/>
-                            </StackPanel>
-
-                            <StackPanel Orientation="Horizontal">
-                                <Label Content="Производитель:"/>
-                                <Label Content="{Binding NameManufacturer}"/>
-                            </StackPanel>
-
-                            <StackPanel Orientation="Horizontal">
-                                <Label Content="Цена:"/>
-                                <Label Content="{Binding WholesalePrice}"/>
+                                <Label Content="Количество:"/>
+                                <Label Content="{Binding Count}"/>
                             </StackPanel>
 
                             <StackPanel Orientation="Horizontal" >
-                                <Label Content="Поставщик: "/>
-                                <Label Content="{Binding Provider.NameProvider}"/>
+                                <Label Content="Цена: "/>
+                                <Label Content="{Binding Price}"/>
                             </StackPanel>
+
+                            <StackPanel Orientation="Horizontal" >
+                                <Label Content="Номер накладной: "/>
+                                <Label Content="{Binding DeliveryNote.Number}"/>
+                            </StackPanel>
+
                         </StackPanel>
 
-                        <StackPanel Orientation="Horizontal" Grid.Column="2" HorizontalAlignment="Right">
+                        <!--<StackPanel Orientation="Horizontal" Grid.Column="2" HorizontalAlignment="Right">
                             <Label Content="На складе: "/>
                             <Label Content="{Binding InStock}"/>
                             <Label Content="{Binding Unit.NameUnit}"/>
-                        </StackPanel>
+                        </StackPanel>-->
 
                     </Grid>
 
@@ -82,9 +91,24 @@
             </ListBox.ItemTemplate>
             <ListBox.ContextMenu>
                 <ContextMenu>
-                    <MenuItem Header="Редактировать" Command="{Binding EditProduct}"/>
+                    <MenuItem Header="Редактировать" Command="{Binding EditProduct}" Padding="5"/>
+                    <MenuItem Header="Удалить" Command="{Binding DeleteProduct}" Padding="5"/>
                 </ContextMenu>
             </ListBox.ContextMenu>
         </ListBox>
+
+        <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="3 5 3 3">
+            <Label Content="{Binding SearchCountRows}"/>
+            <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button Content="&lt;" Width="20" Command="{Binding BackPage}" Margin="4"/>
+                <Label Content="{Binding Pages}" Margin="4"/>
+                <Button Content=">" Width="20" Command="{Binding ForwardPage}" Margin="4"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Grid.Column="2" HorizontalAlignment="Right">
+                <Label Content="Кол-во записей на странице:" Margin="4"/>
+                <ComboBox Width="200" ItemsSource="{Binding ViewCountRows}" SelectedItem="{Binding SelectedViewCountRows}" Margin="4"/>
+                <Button Content="Добавить продукт" Command="{Binding AddProduct}" Margin="4"/>
+            </StackPanel>
+        </StackPanel>
     </Grid>
 </Page>

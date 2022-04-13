@@ -12,7 +12,17 @@ namespace CrackaSmile.ViewModels
     public class EditProviderViewModel: BaseViewModel
     {
         #region par
-        public ProviderApi AddProvider { get; set; }
+        private ProviderApi addProvider;
+        public ProviderApi AddProvider
+        {
+            get => addProvider;
+            set
+            {
+                addProvider = value;
+                SignalChanged();
+            }
+        }
+
         public List<ProviderApi> providers { get; set; }
         #endregion
 

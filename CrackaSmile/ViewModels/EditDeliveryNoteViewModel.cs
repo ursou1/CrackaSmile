@@ -12,7 +12,17 @@ namespace CrackaSmile.ViewModels
     public class EditDeliveryNoteViewModel: BaseViewModel
     {
         #region par
-        public DeliveryNoteApi AddDeliveryNote { get; set; }
+        private DeliveryNoteApi addDeliveryNote;
+        public DeliveryNoteApi AddDeliveryNote
+        {
+            get => addDeliveryNote;
+            set
+            {
+                addDeliveryNote = value;
+                SignalChanged();
+            }
+        }
+
         public List<DeliveryNoteApi> deliveryNotes { get; set; }
         public List<ProviderApi> providers { get; set; }
 
@@ -40,7 +50,6 @@ namespace CrackaSmile.ViewModels
                 if (deliveryNote == null)
                 {
                     AddDeliveryNote = new DeliveryNoteApi();
-
                 }
                 else
                 {
@@ -75,6 +84,7 @@ namespace CrackaSmile.ViewModels
         }
         public async Task CreateNewDeliveryNote()
         {
+            AddDeliveryNote.ProviderId = selectedProvider.Id;
             await Api.PostAsync<DeliveryNoteApi>(AddDeliveryNote, "DeliveryNote");
         }
 
