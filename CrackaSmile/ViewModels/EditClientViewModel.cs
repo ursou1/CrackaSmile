@@ -11,7 +11,7 @@ namespace CrackaSmile.ViewModels
 {
     public class EditClientViewModel: BaseViewModel
     {
-        #region par
+        #region properties
         private ClientApi addClient;
         public ClientApi AddClient
         {
