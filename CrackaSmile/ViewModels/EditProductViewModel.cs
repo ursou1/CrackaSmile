@@ -56,7 +56,7 @@ namespace CrackaSmile.ViewModels
 
         public EditProductViewModel(ProductApi product)
         {
-            TakeListProducts().ContinueWith(s =>
+            Task.Run(TakeListProducts).ContinueWith(s =>
             {
                 if (product == null)
                 {
@@ -123,7 +123,9 @@ namespace CrackaSmile.ViewModels
             var result2 = await Api.GetListAsync<UnitApi[]>("Unit");
             units = new List<UnitApi>(result2);
             SignalChanged("units");
+
         }
+
 
         public void CloseWin(object obj)
         {

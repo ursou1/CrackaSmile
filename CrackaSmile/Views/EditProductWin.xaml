@@ -20,8 +20,8 @@
                 <RowDefinition/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
-            
-            <StackPanel Grid.Row="0">
+
+            <StackPanel Grid.Row="0" DataContext="{Binding AddProduct}">
             <Label Content="Код:" FontSize="20" HorizontalAlignment="Center" Margin="0 5 0 5"/>
                 <TextBox Text="{Binding Code}" Width="250" FontSize="20"/>
             

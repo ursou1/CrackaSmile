@@ -108,20 +108,7 @@ namespace CrackaSmile.ViewModels
             //    SelectedProvider = deliveryNote1.Provider;
             //}
         }
-
-        //async Task TakeListDepartNotes(DepartNoteApi departNoteApi)
-        //{
-        //    departNotes = await Api.GetListAsync<List<DepartNoteApi>>("DepartNote");
-        //    clients = await Api.GetListAsync<List<ClientApi>>("Client");
-        //    if (departNoteApi == null)
-        //    {
-        //        SelectedClient = clients.FirstOrDefault();
-        //    }
-        //    else
-        //    {
-        //        SelectedClient = clients.FirstOrDefault(s => s.Id == departNoteApi.ClientId);
-        //    }
-        //}
+        
 
         public void CloseWin(object obj)
         {
