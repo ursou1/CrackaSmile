@@ -1,11 +1,14 @@
 ﻿using CrackaSmile.Tools;
+using Microsoft.Win32;
 using ModelsApi;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Media.Imaging;
 
 namespace CrackaSmile.ViewModels
 {
@@ -45,6 +48,17 @@ namespace CrackaSmile.ViewModels
             }
         }
 
+        private BitmapImage imageProduct;
+        public BitmapImage ImageProduct
+        {
+            get => imageProduct;
+            set
+            {
+                imageProduct = value;
+                SignalChanged();
+            }
+        }
+
         public List<ProductApi> products { get; set; }
         public List<ProductTypeApi> productTypes { get; set; }
         public List<UnitApi> units { get; set; }
@@ -52,6 +66,7 @@ namespace CrackaSmile.ViewModels
 
         #region commands
         public CustomCommand Save { get; set; }
+        public CustomCommand SelectImage { get; set; }
         #endregion
 
         public EditProductViewModel(ProductApi product)
@@ -69,6 +84,7 @@ namespace CrackaSmile.ViewModels
                         Id = product.Id,
                         Code = product.Code,
                         Name = product.Name,
+                        Image = product.Image,
                         Count = product.Count,
                         Price = product.Price,
                         Description = product.Description,
@@ -94,6 +110,40 @@ namespace CrackaSmile.ViewModels
                 }
 
             });
+
+            string directory = Environment.CurrentDirectory;
+            if (AddProduct != null)
+                if (!string.IsNullOrEmpty(AddProduct.Image))
+                    ImageProduct = GetImageFromPath(directory.Substring(0, directory.Length - 10) + "\\" + AddProduct.Image);
+            SelectImage = new CustomCommand(() =>
+            {
+                OpenFileDialog ofd = new OpenFileDialog();
+                if (ofd.ShowDialog() == true)
+                {
+                    try
+                    {
+                        var info = new FileInfo(ofd.FileName);
+                        ImageProduct = GetImageFromPath(ofd.FileName);
+                        AddProduct.Image = $"/Images/{info.Name}";
+                        var newPath = directory.Substring(0, directory.Length - 10) + AddProduct.Image;
+                        File.Copy(ofd.FileName, newPath);
+                    }
+                    catch (Exception e)
+                    {
+                        MessageBox.Show(e.Message);
+                    }
+                }
+            });
+        }
+
+        private BitmapImage GetImageFromPath(string url)
+        {
+            BitmapImage img = new BitmapImage();
+            img.BeginInit();
+            img.CacheOption = BitmapCacheOption.OnLoad;
+            img.UriSource = new Uri(url, UriKind.Absolute);
+            img.EndInit();
+            return img;
         }
 
         public async Task CreateNewProduct()
@@ -123,7 +173,6 @@ namespace CrackaSmile.ViewModels
             var result2 = await Api.GetListAsync<UnitApi[]>("Unit");
             units = new List<UnitApi>(result2);
             SignalChanged("units");
-
         }
 
 

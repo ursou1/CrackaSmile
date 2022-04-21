@@ -247,7 +247,7 @@ namespace CrackaSmile.ViewModels
 
             var result1 = await Api.GetListAsync<DeliveryNoteApi[]>("DeliveryNote");
             deliveryNotes = new List<DeliveryNoteApi>(result1);
-            SignalChanged("clients");
+            SignalChanged("deliveryNotes");
             
             foreach (var product in products)
             {
