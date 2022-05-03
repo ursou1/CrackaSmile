@@ -17,20 +17,20 @@ using System.Windows.Shapes;
 namespace CrackaSmile.Views
 {
     /// <summary>
-    /// Логика взаимодействия для EditProductInDeliveryWin.xaml
+    /// Логика взаимодействия для ProductInfoWin.xaml
     /// </summary>
-    public partial class EditProductInDeliveryWin : Window
+    public partial class ProductInfoWin : Window
     {
-        public EditProductInDeliveryWin()
+        public ProductInfoWin()
         {
             InitializeComponent();
-            DataContext = new EditProductInDeliveryVM(null);
+            DataContext = new ProductInfoViewModel(null);
         }
 
-        public EditProductInDeliveryWin(DeliveryNoteApi deliveryNote)
+        public ProductInfoWin(ProductApi product)
         {
             InitializeComponent();
-            DataContext = new EditProductInDeliveryVM(deliveryNote);
+            DataContext = new ProductInfoViewModel(product);
         }
     }
 }

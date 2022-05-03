@@ -59,9 +59,12 @@ namespace CrackaSmile.ViewModels
             }
         }
 
+        public List<ProductPartOfWarehouseApi> partSelectedCount { get; set; }
+        public List<ProductPartOfWarehouseApi> partAllCount { get; set; }
         public List<ProductApi> products { get; set; }
         public List<ProductTypeApi> productTypes { get; set; }
         public List<UnitApi> units { get; set; }
+        int idProduct;
         #endregion
 
         #region commands
@@ -94,6 +97,8 @@ namespace CrackaSmile.ViewModels
 
                     SelectedProductType = productTypes.First(s => s.Id == product.ProductTypeId);
                     SelectedUnit = units.First(s => s.Id == product.UnitId);
+                    idProduct = product.Id;
+                    PartCountMethod();
                 }
             });
 
@@ -175,6 +180,30 @@ namespace CrackaSmile.ViewModels
             SignalChanged("units");
         }
 
+        public List<PartOfWarehouseApi> AllPart { get; set; }
+        public List<ProductPartOfWarehouseApi> mynew { get; set; }
+        public async Task PartCountMethod()
+        {
+            mynew = new List<ProductPartOfWarehouseApi>();
+            var result = await Api.GetListAsync<ProductPartOfWarehouseApi[]>("ProductPartOfWarehouse");
+            partAllCount = new List<ProductPartOfWarehouseApi>(result);
+            SignalChanged("partAllCount");
+
+            var result1 = await Api.GetListAsync<PartOfWarehouseApi[]>("PartOfWarehouse");
+            AllPart = new List<PartOfWarehouseApi>(result1);
+            SignalChanged("AllPart");
+            partSelectedCount = new List<ProductPartOfWarehouseApi>();
+
+            foreach (var part in partAllCount)
+            {
+                part.PartOfWareHouse = AllPart.First(s => s.Id == part.PartOfWarehouseId);
+                mynew.Add(part);
+
+            }
+
+            
+
+        }
 
         public void CloseWin(object obj)
         {

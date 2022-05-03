@@ -13,6 +13,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="FreeSpire.XLS" Version="12.2.0" />
+    <PackageReference Include="LiveChartsCore.SkiaSharpView.WPF" Version="2.0.0-beta.210" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Reference Include="ModelsApi">
       <HintPath>..\..\AForcedSmile\ModelsApi\bin\Debug\net5.0\ModelsApi.dll</HintPath>
     </Reference>

@@ -118,6 +118,7 @@ namespace CrackaSmile.ViewModels
         public CustomCommand AddDepartNote { get; set; }
         public CustomCommand EditDepartNote { get; set; }
         public CustomCommand DeleteDepartNote { get; set; }
+        public CustomCommand EditProductInDepart { get; set; }
 
         public CustomCommand BackPage { get; set; }
         public CustomCommand ForwardPage { get; set; }
@@ -148,6 +149,12 @@ namespace CrackaSmile.ViewModels
 
             #region команды по работе с записями
 
+            EditProductInDepart = new CustomCommand(() =>
+            {
+                if (SelectedDepartNote == null) return;
+                EditProductInDepartWin editProductInDepartWin = new EditProductInDepartWin(SelectedDepartNote);
+                editProductInDepartWin.ShowDialog();
+            });
 
             AddDepartNote = new CustomCommand(() =>
             {

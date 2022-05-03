@@ -10,7 +10,157 @@
         Width="1200" WindowStartupLocation="CenterScreen"
         Style="{StaticResource CustomWindowStyle}">
     <Grid>
-        <Grid.RowDefinitions>
+        <TabControl>
+            <TabItem>
+                <TabItem.Header>
+                    <Label Content="Настройки продукта"/>
+                </TabItem.Header>
+                <TabItem.Content>
+                    <Grid>
+                    
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition Height="70"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+
+
+                    <Grid Grid.Column="0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+
+                        <StackPanel Grid.Row="0" DataContext="{Binding AddProduct}">
+                            <Label Content="Код:" FontSize="20" HorizontalAlignment="Center" Margin="0 5 0 5"/>
+                            <TextBox Text="{Binding Code}" Width="250" FontSize="20"/>
+
+                            <Label Content="Наименование:" FontSize="20" HorizontalAlignment="Center" Margin="0 5 0 5"/>
+                            <TextBox Text="{Binding Name}" Width="250" FontSize="20"/>
+
+                            <Label Content="Количество:" FontSize="20" HorizontalAlignment="Center" Margin="0 5 0 5"/>
+                            <TextBox Text="{Binding Count}" Width="250" FontSize="20"/>
+
+                            <Label Content="Цена:" FontSize="20" HorizontalAlignment="Center" Margin="0 5 0 5"/>
+                            <TextBox Text="{Binding Price}" Width="250" FontSize="20"/>
+
+
+                        </StackPanel>
+
+                        <StackPanel Grid.Row="1" Margin="0 20 0 0" DataContext="{Binding AddProduct}">
+                            <Label Content="Описание:" FontSize="20" Margin="0 5 0 5"/>
+                            <TextBox Text="{Binding Description}" FontSize="20" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" TextWrapping="Wrap"  Height="180" Margin="10 10 10 10"/>
+                        </StackPanel>
+
+                    </Grid>
+
+                    <Grid Grid.Column="1">
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition Height="50"/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+
+                        <StackPanel Grid.Row="0" DataContext="{Binding AddProduct}">
+                            <Label Content="Фото:" FontSize="20" Margin="0 5 0 5" HorizontalAlignment="Center"/>
+                            <Image Source="{Binding Image}" Width="150" Height="150" Margin="0 20 0 20"/>
+                        </StackPanel>
+                        <StackPanel Grid.Row="1">
+                            <Button  Content="Выбрать изображение" Command="{Binding SelectImage}" Width="170" Height="35" Cursor="Hand"/>
+
+                        </StackPanel>
+
+                        <StackPanel Grid.Row="2">
+                            <Label Content="Тип продукта:" FontSize="20" HorizontalAlignment="Center" Margin="0 5 0 5"/>
+                            <ComboBox  ItemsSource="{Binding productTypes}" SelectedItem="{Binding SelectedProductType}" Width="200" Height="40" FontSize="20" DisplayMemberPath="Title" Margin="2" IsEditable="True"/>
+
+                            <Label Content="Единица измерения:" FontSize="20" HorizontalAlignment="Center" Margin="0 5 0 5"/>
+                            <ComboBox  ItemsSource="{Binding units}" SelectedItem="{Binding SelectedUnit}" Width="200" Height="40" FontSize="20" DisplayMemberPath="Title" Margin="2" IsEditable="True"/>
+                        </StackPanel>
+
+                    </Grid>
+
+                    <Grid Grid.Row="1" Grid.Column="2">
+                        <Button Command="{Binding Save}" Margin="0 0 195 30" Content="Сохранить" Width="170" Height="35"  VerticalContentAlignment="Center"  FontSize="18" VerticalAlignment="Bottom" HorizontalAlignment="Right" Cursor="Hand" />
+                    </Grid>
+                </Grid>
+                </TabItem.Content>
+            </TabItem>
+
+            <TabItem>
+                <TabItem.Header>
+                    <Label Content="Хранение"/>
+                </TabItem.Header>
+                <TabItem.Content>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition Height="75"/>
+                        </Grid.RowDefinitions>
+
+                        <ListBox Grid.Column="0" ItemsSource="{Binding mynew}" Name="list" HorizontalContentAlignment="Stretch" SelectionMode="Extended">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate >
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="auto"/>
+                                            <ColumnDefinition />
+                                            <ColumnDefinition/>
+                                        </Grid.ColumnDefinitions>
+                                        <StackPanel Grid.Column="1" Orientation="Vertical" HorizontalAlignment="Left">
+                                            <StackPanel Orientation="Horizontal">
+                                                <Label Content="{Binding ProductCount}"/>
+                                                <Label Content="единиц"/>
+                                                <Label Content="{Binding partSelectedCount.PartOfWarehouse.Title}"/>
+                                            </StackPanel>
+                                            <StackPanel Orientation="Horizontal">
+                                                <Label Content="Положили сюда:"/>
+                                                <Label Content="{Binding PartOfWareHouse.Title}"/>
+                                            </StackPanel>
+                                            <!--<StackPanel Orientation="Horizontal">
+                                                <Label Content="Положили сюда2:"/>
+                                                <Label Content="{Binding PartOfWareHouse.Title}"/>
+                                            </StackPanel>-->
+                                        </StackPanel>
+                                    </Grid>
+
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+
+                        <ListBox Grid.Column="1" ItemsSource="{Binding partOfWarehouse}"  HorizontalContentAlignment="Stretch" SelectionMode="Extended">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate >
+                                    <Grid>
+                                        <StackPanel  Orientation="Vertical" HorizontalAlignment="Left">
+                                            <StackPanel Orientation="Horizontal">
+                                                <Label Content="{Binding PartOfWarehouse.Title}"/>
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </Grid>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+
+                        <StackPanel Grid.Row="1" Grid.Column="2">
+                            <Button Command="{Binding Add}" Content="Добавить" Width="170" Height="35" VerticalContentAlignment="Center"  FontSize="18" VerticalAlignment="Center" HorizontalAlignment="Center" Cursor="Hand" />
+                        </StackPanel>
+                    </Grid>
+                </TabItem.Content>
+            </TabItem>
+            
+            
+        </TabControl>
+            
+        <!--<Grid.RowDefinitions>
             <RowDefinition/>
             <RowDefinition Height="70"/>
         </Grid.RowDefinitions>
@@ -77,7 +227,7 @@
 
         <Grid Grid.Row="1" Grid.Column="2">
             <Button Command="{Binding Save}" Margin="0 0 195 30" Content="Сохранить" Width="170" Height="35"  VerticalContentAlignment="Center"  FontSize="18" VerticalAlignment="Bottom" HorizontalAlignment="Right" Cursor="Hand" />
-        </Grid>
+        </Grid>-->
 
     </Grid>
 </Window>

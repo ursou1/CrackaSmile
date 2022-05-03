@@ -57,6 +57,8 @@
         <Frame Grid.Row="1" NavigationUIVisibility="Hidden"
                         Grid.Column="1" Margin="10"
                         Content="{Binding CurrentPage}"/>
+        
+        
 
     </Grid>
 </Window>

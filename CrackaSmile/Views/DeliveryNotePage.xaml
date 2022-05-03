@@ -101,6 +101,7 @@
             <ListBox.ContextMenu>
                 <ContextMenu>
                     <MenuItem Header="Редактировать" Command="{Binding EditDeliveryNote}" Padding="5"/>
+                    <MenuItem Header="Добавить товар в накладную" Command="{Binding EditProductInDelivery}" Padding="5"/>
                     <MenuItem Header="Удалить" Command="{Binding DeleteDeliveryNote}" Padding="5"/>
                 </ContextMenu>
             </ListBox.ContextMenu>

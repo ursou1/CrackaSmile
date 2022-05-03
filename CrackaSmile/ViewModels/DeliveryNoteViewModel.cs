@@ -117,6 +117,7 @@ namespace CrackaSmile.ViewModels
 
         #region Commands
         public CustomCommand AddDeliveryNote { get; set; }
+        public CustomCommand EditProductInDelivery { get; set; }
         public CustomCommand EditDeliveryNote { get; set; }
         public CustomCommand DeleteDeliveryNote { get; set; }
 
@@ -149,6 +150,12 @@ namespace CrackaSmile.ViewModels
 
             #region команды по работе с записями
 
+            EditProductInDelivery = new CustomCommand(() =>
+            {
+                if (SelectedDeliveryNote == null) return;
+                EditProductInDeliveryWin editProductInDeliveryWin = new EditProductInDeliveryWin(SelectedDeliveryNote);
+                editProductInDeliveryWin.ShowDialog();
+            });
 
             AddDeliveryNote = new CustomCommand(() =>
             {

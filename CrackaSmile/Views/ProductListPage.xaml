@@ -92,6 +92,7 @@
             <ListBox.ContextMenu>
                 <ContextMenu>
                     <MenuItem Header="Редактировать" Command="{Binding EditProduct}" Padding="5"/>
+                    <MenuItem Header="Подробнее.." Command="{Binding InfoProduct}" Padding="5"/>
                     <MenuItem Header="Удалить" Command="{Binding DeleteProduct}" Padding="5"/>
                 </ContextMenu>
             </ListBox.ContextMenu>

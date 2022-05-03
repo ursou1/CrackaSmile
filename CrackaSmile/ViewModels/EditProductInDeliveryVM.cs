@@ -10,12 +10,9 @@ using System.Windows;
 
 namespace CrackaSmile.ViewModels
 {
-    public class ProductListViewModel: BaseViewModel
+    public class EditProductInDeliveryVM: BaseViewModel
     {
-
         #region properties
-        public List<DeliveryNoteApi> deliveryNotes { get; set; }
-
         public ProductApi selectedProduct;
         public ProductApi SelectedProduct
         {
@@ -28,6 +25,7 @@ namespace CrackaSmile.ViewModels
         }
 
         public List<ProductApi> products { get; set; }
+        public List<ProductApi> productsInNote { get; set; }
         public List<ProductApi> Products
         {
             get => products;
@@ -37,6 +35,15 @@ namespace CrackaSmile.ViewModels
                 SignalChanged();
             }
         }
+
+        int idNote;
+        #endregion properties
+
+        #region commands
+        public CustomCommand AddProductInNote { get; set; }
+        public CustomCommand BackPage { get; set; }
+        public CustomCommand ForwardPage { get; set; }
+
         #endregion
 
         #region search&sort
@@ -79,7 +86,7 @@ namespace CrackaSmile.ViewModels
             set
             {
                 selectedSortType = value;
-                Sort();
+                //Sort();
             }
         }
         public List<string> SearchType { get; set; }
@@ -90,7 +97,7 @@ namespace CrackaSmile.ViewModels
             set
             {
                 selectedSearchType = value;
-                Search();
+                //Search();
             }
         }
         public List<string> ViewCountRows { get; set; }
@@ -112,81 +119,32 @@ namespace CrackaSmile.ViewModels
         private string selectedViewCountRows;
         #endregion
 
-        #region commands
-        public CustomCommand AddProduct { get; set; }
-        public CustomCommand EditProduct { get; set; }
-        public CustomCommand InfoProduct { get; set; }
-        public CustomCommand DeleteProduct { get; set; }
-
-        public CustomCommand BackPage { get; set; }
-        public CustomCommand ForwardPage { get; set; }
+        #region ResetList
+        public void Reset()
+        {
+            //products = new List<ProductApi>();
+            productsInNote = new List<ProductApi>();
+            foreach (var product in products)
+            {
+                if (product.DeliveryNoteId == idNote)
+                    productsInNote.Add(product);
+            }
+            MessageBox.Show("Данные были обновлены");
+        }
         #endregion
 
-        #region ctor
-        public ProductListViewModel()
+        public EditProductInDeliveryVM(DeliveryNoteApi deliveryNote)
         {
+            idNote = deliveryNote.Id;
             Task.Run(TakeListProducts).ContinueWith(s =>
             {
-                Task.Run(TakeListDeliveryNotes);
                 InitPagination();
                 Pagination();
             });
-
+            Task.Run(LoadEntities);
             ViewCountRows = new List<string>();
             ViewCountRows.AddRange(new string[] { "15", "все" });
             selectedViewCountRows = ViewCountRows.First();
-
-            SearchType = new List<string>();
-            SearchType.AddRange(new string[] { "Наименование" });
-            selectedSearchType = SearchType.First();
-
-            SortTypes = new List<string>();
-            SortTypes.AddRange(new string[] { "По умолчанию", "По алфавиту: А-Я", "По алфавиту: Я-А" });
-            selectedSortType = SortTypes.First();
-
-            Task.Run(LoadEntities);
-
-            #region команды по работе с записями
-
-
-            AddProduct = new CustomCommand(() =>
-            {
-                EditProductWin editProduct = new EditProductWin();
-                editProduct.ShowDialog();
-            });
-
-            InfoProduct = new CustomCommand(() =>
-            {
-                if (SelectedProduct == null) return;
-                ProductInfoWin infoProduct = new ProductInfoWin(SelectedProduct);
-                infoProduct.ShowDialog();
-            });
-
-            EditProduct = new CustomCommand(() =>
-            {
-                if (SelectedProduct == null) return;
-                EditProductWin editProduct = new EditProductWin(SelectedProduct);
-                editProduct.ShowDialog();
-            });
-
-            DeleteProduct = new CustomCommand(() =>
-            {
-                MessageBoxResult result = MessageBox.Show("Удалить поставщика?", "Подтвердите действие", MessageBoxButton.YesNo, MessageBoxImage.Question);
-                if (result == MessageBoxResult.Yes)
-                {
-                    try
-                    {
-                        Task.Run(DeleteProductMethod);
-                    }
-                    catch (Exception e)
-                    {
-
-                        MessageBox.Show(e.Message);
-                    }
-                }
-                else return;
-            });
-            #endregion
 
             #region странички
 
@@ -216,34 +174,42 @@ namespace CrackaSmile.ViewModels
 
             });
             #endregion
+
+            AddProductInNote = new CustomCommand(() =>
+            {
+                if (SelectedProduct == null)
+                    return;
+               // if(selectedProduct.DeliveryNoteId != null)
+                selectedProduct.DeliveryNoteId = deliveryNote.Id;
+                Task.Run(EditProduct);
+                //Task.Run(TakeListProducts);
+                Reset();
+            });
+
         }
-        #endregion
 
-        internal void Sort()
-        {
-
-            if (SelectedSortType == "По умолчанию")
-                return;
-            else if (SelectedSortType == "По алфавиту: А-Я")
-                searchResult.Sort((x, y) => x.Name.CompareTo(y.Name));
-            else if (SelectedSortType == "По алфавиту: Я-А")
-                searchResult.Sort((x, y) => y.Name.CompareTo(x.Name));
-
-            paginationPageIndex = 0;
-            Pagination();
-        }
 
         private void Search()
         {
             var search = SearchText.ToLower();
+            //Task.Run(TakeListProducts);
             Task.Run(LoadEntities);
             searchResult = mysearch.Where(c => c.Name.ToString().Contains(search) ||
             c.Price.ToString().Contains(search) ||
             c.Code.ToLower().Contains(search)).ToList();
 
-            Sort();
             InitPagination();
             Pagination();
+        }
+        public async Task LoadEntities()
+        {
+            var result = await Api.GetListAsync<ProductApi[]>("Product");
+            mysearch = new List<ProductApi>(result);
+            products = new List<ProductApi>(result);
+        }
+        public async Task EditProduct()
+        {
+            await Api.PutAsync<ProductApi>(SelectedProduct, "Product");
         }
 
         public async Task TakeListProducts()
@@ -252,43 +218,17 @@ namespace CrackaSmile.ViewModels
             products = new List<ProductApi>(result);
             SignalChanged("products");
             searchResult = new List<ProductApi>(result);
-
-            var result1 = await Api.GetListAsync<DeliveryNoteApi[]>("DeliveryNote");
-            deliveryNotes = new List<DeliveryNoteApi>(result1);
-            SignalChanged("deliveryNotes");
-            
+            productsInNote = new List<ProductApi>();
             foreach (var product in products)
             {
-                product.DeliveryNote = deliveryNotes.First(s => s.Id == product.DeliveryNoteId);
-            }
-        }
-        
-        public async Task TakeListDeliveryNotes()
-        {
-            var result1 = await Api.GetListAsync<DeliveryNoteApi[]>("DeliveryNote");
-            deliveryNotes = new List<DeliveryNoteApi>(result1);
-            SignalChanged("deliveryNotes");
-        }
-
-        public async Task DeleteProductMethod()
-        {
-            await Api.DeleteAsync<ProductApi>(selectedProduct, "Product");
-        }
-
-        public async Task LoadEntities()
-        {
-            var result = await Api.GetListAsync<ProductApi[]>("Product");
-            mysearch = new List<ProductApi>(result);
-            products = new List<ProductApi>(result);
-            var result1 = await Api.GetListAsync<DeliveryNoteApi[]>("DeliveryNote");
-            deliveryNotes = new List<DeliveryNoteApi>(result1);
-            SignalChanged("deliveryNotes");
-            foreach (var product in products)
-            {
-                product.DeliveryNote = deliveryNotes.First(s => s.Id == product.DeliveryNoteId);
+                if (product.DeliveryNoteId == idNote)
+                    productsInNote.Add(product);
             }
             
         }
+
+
+        #region other for search
 
         private void InitPagination()
         {
@@ -309,5 +249,7 @@ namespace CrackaSmile.ViewModels
                     .Take(rowsOnPage).ToList();
             }
         }
+        #endregion
+
     }
 }
