@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -23,7 +24,16 @@ namespace CrackaSmile.ViewModels
             }
         }
 
-        public List<ClientApi> clients { get; set; }
+        //public List<ClientApi> clients { get; set; }
+        //public List<ClientApi> Clients
+        //{
+        //    get => clients;
+        //    set
+        //    {
+        //        clients = value;
+        //        SignalChanged();
+        //    }
+        //}
         #endregion
 
         #region commands
@@ -33,7 +43,7 @@ namespace CrackaSmile.ViewModels
 
         public EditClientViewModel(ClientApi client)
         {
-            Task.Run(TakeListClients);
+            //Task.Run(TakeListClients);
 
             if (client == null)
             {
@@ -56,11 +66,17 @@ namespace CrackaSmile.ViewModels
             Save = new CustomCommand(() =>
             {
                 if (AddClient.Id == 0)
+                {
                     Task.Run(CreateNewClient);
+                    
+                }
                 else
+                {
                     Task.Run(EditClient);
+                    
+                }
+                    
 
-                
                 foreach (Window window in Application.Current.Windows)
                 {
                     if (window.DataContext == this) CloseWin(window);
@@ -74,17 +90,19 @@ namespace CrackaSmile.ViewModels
             await Api.PostAsync<ClientApi>(AddClient, "Client");
         }
 
+        ClientListViewModel cl = new ClientListViewModel();
         public async Task EditClient()
         {
             await Api.PutAsync<ClientApi>(AddClient, "Client");
         }
 
-        public async Task TakeListClients()//вызов клиентов
-        {
-            var result = await Api.GetListAsync<ClientApi[]>("Client");
-            clients = new List<ClientApi>(result);
-            SignalChanged("clients");
-        }
+
+        //public async Task TakeListClients()//вызов клиентов
+        //{
+        //    var result = await Api.GetListAsync<ClientApi[]>("Client");
+        //    Clients = new List<ClientApi>(result);
+        //    SignalChanged("Clients");
+        //}
 
         public void CloseWin(object obj)
         {

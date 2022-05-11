@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media.Imaging;
@@ -15,6 +16,63 @@ namespace CrackaSmile.ViewModels
     public class EditProductViewModel: BaseViewModel
     {
         #region properties
+
+        private ProductPartOfWarehouseApi addProductInPart;
+        public ProductPartOfWarehouseApi AddProductInPart
+        {
+            get => addProductInPart;
+            set
+            {
+                addProductInPart = value;
+                SignalChanged();
+            }
+        }
+
+        public int selectedCountOfProduct;
+        public int SelectedCountOfProduct
+        {
+            get => selectedCountOfProduct;
+            set
+            {
+                selectedCountOfProduct = value;
+                SignalChanged();
+            }
+        }
+
+        public PartOfWarehouseApi selectedAllPart;
+        public PartOfWarehouseApi SelectedAllPart
+        {
+            get => selectedAllPart;
+            set
+            {
+                selectedAllPart = value;
+                SignalChanged();
+            }
+        }
+
+        public ProductPartOfWarehouseApi selectedMyNew;
+        public ProductPartOfWarehouseApi SelectedMyNew
+        {
+            get => selectedMyNew;
+            set
+            {
+                selectedMyNew = value;
+                SignalChanged();
+            }
+        }
+
+        public List<PartOfWarehouseApi> allParts { get; set; }
+        public List<PartOfWarehouseApi> AllParts
+        {
+            get => allParts;
+            set
+            {
+                allParts = value;
+                SignalChanged();
+            }
+        }
+
+
         private ProductApi addProduct;
         public ProductApi AddProduct
         {
@@ -70,6 +128,8 @@ namespace CrackaSmile.ViewModels
         #region commands
         public CustomCommand Save { get; set; }
         public CustomCommand SelectImage { get; set; }
+        public CustomCommand Add { get; set; }
+        public CustomCommand TakeOff { get; set; }
         #endregion
 
         public EditProductViewModel(ProductApi product)
@@ -98,7 +158,7 @@ namespace CrackaSmile.ViewModels
                     SelectedProductType = productTypes.First(s => s.Id == product.ProductTypeId);
                     SelectedUnit = units.First(s => s.Id == product.UnitId);
                     idProduct = product.Id;
-                    PartCountMethod();
+                    Task.Run(PartCountMethod);
                 }
             });
 
@@ -113,6 +173,31 @@ namespace CrackaSmile.ViewModels
                 {
                     if (window.DataContext == this) CloseWin(window);
                 }
+
+            });
+
+            Add = new CustomCommand(() =>
+            {
+                //try
+                //{
+                    AddProductInPart = new ProductPartOfWarehouseApi();
+                    //AddProductInPart.PartOfWarehouseId = SelectedAllPart.Id;
+                    //AddProductInPart.ProductId = idProduct;
+                    //AddProductInPart.ProductCount = SelectedCountOfProduct;
+                    Task.Run(AddProductInPartMethod);
+                //}
+                //catch (Exception ex)
+                //{
+                //    MessageBox.Show(ex.Message);
+                //}
+            });
+
+            TakeOff = new CustomCommand(() =>
+            {
+                if (AddProduct.Id == 0)
+                    Task.Run(CreateNewProduct);
+                else
+                    Task.Run(EditProduct);
 
             });
 
@@ -180,7 +265,6 @@ namespace CrackaSmile.ViewModels
             SignalChanged("units");
         }
 
-        public List<PartOfWarehouseApi> AllPart { get; set; }
         public List<ProductPartOfWarehouseApi> mynew { get; set; }
         public async Task PartCountMethod()
         {
@@ -190,19 +274,31 @@ namespace CrackaSmile.ViewModels
             SignalChanged("partAllCount");
 
             var result1 = await Api.GetListAsync<PartOfWarehouseApi[]>("PartOfWarehouse");
-            AllPart = new List<PartOfWarehouseApi>(result1);
-            SignalChanged("AllPart");
+            allParts = new List<PartOfWarehouseApi>(result1);
+            SignalChanged("allParts");
+            
             partSelectedCount = new List<ProductPartOfWarehouseApi>();
 
             foreach (var part in partAllCount)
             {
-                part.PartOfWareHouse = AllPart.First(s => s.Id == part.PartOfWarehouseId);
-                mynew.Add(part);
+                if(idProduct == part.ProductId)
+                {
+                    part.PartOfWareHouse = allParts.First(s => s.Id == part.PartOfWarehouseId);
+                    mynew.Add(part);
+                }
 
             }
 
             
 
+        }
+
+        public async Task AddProductInPartMethod()
+        {
+            AddProductInPart.PartOfWarehouseId = SelectedAllPart.Id;
+            AddProductInPart.ProductId = idProduct;
+            AddProductInPart.ProductCount = SelectedCountOfProduct;
+            await Api.PostAsync<ProductPartOfWarehouseApi>(AddProductInPart, "ProductPartOfWarehouseApi");
         }
 
         public void CloseWin(object obj)

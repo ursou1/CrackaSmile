@@ -9,7 +9,9 @@
       Title="SettingsPage">
 
     <Grid>
-        <Label Content="Сменить тему"/>
-        <ComboBox ItemsSource="{}" SelectedItem="{Binding SelectedTheme}"/>
+        <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
+        <Label Content="Сменить тему" FontSize="24"/>
+        <ComboBox ItemsSource="{Binding Themes}" SelectedItem="{Binding SelectedTheme}" Width="150"/>
+        </StackPanel>
     </Grid>
 </Page>

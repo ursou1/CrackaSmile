@@ -2,6 +2,7 @@
 using REghZyFramework.Themes;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,6 +19,12 @@ namespace CrackaSmile.ViewModels
         #endregion
 
         #region properties
+
+        string q = "Light";
+        string qw = "Dark";
+
+        public ObservableCollection<string> Themes { get; set; }
+
         private object _selectedTheme;
         public object SelectedTheme
         {
@@ -25,6 +32,14 @@ namespace CrackaSmile.ViewModels
             set
             {
                 _selectedTheme = value;
+                if(SelectedTheme.ToString() == "Light")
+                {
+                    ThemesController.SetTheme(ThemesController.ThemeTypes.Light);
+                }
+                if(SelectedTheme.ToString() == "Dark")
+                {
+                    ThemesController.SetTheme(ThemesController.ThemeTypes.Dark);
+                }
                 SignalChanged("SelectedTheme");
             }
         }
@@ -32,6 +47,9 @@ namespace CrackaSmile.ViewModels
 
         public SettingsViewModel()
         {
+            Themes = new ObservableCollection<string>();
+            Themes.Add(q);
+            Themes.Add(qw);
             SetColourfulDarkTheme = new CustomCommand(() =>
             {
                 ThemesController.SetTheme(ThemesController.ThemeTypes.ColourfulDark);

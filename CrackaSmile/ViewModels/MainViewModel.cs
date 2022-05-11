@@ -36,6 +36,7 @@ namespace CrackaSmile.ViewModels
         public CustomCommand ProviderPage { get; set; }
         public CustomCommand DeliveryNotePage { get; set; }
         public CustomCommand DepartNotePage { get; set; }
+        public CustomCommand SettingsPage { get; set; }
         #endregion
 
         public MainViewModel()
@@ -70,6 +71,12 @@ namespace CrackaSmile.ViewModels
             DepartNotePage = new CustomCommand(() =>
             {
                 CurrentPage = new DepartNotePage();
+                SignalChanged("CurrentPage");
+            });
+
+            SettingsPage = new CustomCommand(() =>
+            {
+                CurrentPage = new SettingsPage();
                 SignalChanged("CurrentPage");
             });
         }

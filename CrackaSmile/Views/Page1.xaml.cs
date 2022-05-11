@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CrackaSmile.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,6 +24,7 @@ namespace CrackaSmile.Views
         public Page1()
         {
             InitializeComponent();
+            DataContext = new Page1ViewModel();
         }
     }
 }

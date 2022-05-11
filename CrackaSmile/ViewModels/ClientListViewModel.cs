@@ -3,10 +3,13 @@ using CrackaSmile.Views;
 using ModelsApi;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Data;
 
 namespace CrackaSmile.ViewModels
 {
@@ -147,13 +150,17 @@ namespace CrackaSmile.ViewModels
             {
                 EditClientWin editClient = new EditClientWin();
                 editClient.ShowDialog();
+                Thread.Sleep(200);
+                Task.Run(TakeListClients);
             });
-
+            
             EditClient = new CustomCommand(() =>
             {
                 if (SelectedClient == null) return;
                 EditClientWin editClient = new EditClientWin(SelectedClient);
                 editClient.ShowDialog();
+                Thread.Sleep(200);
+                Task.Run(TakeListClients);
             });
 
             DeleteClient = new CustomCommand(() =>
@@ -164,6 +171,8 @@ namespace CrackaSmile.ViewModels
                     try
                     {
                         Task.Run(DeleteClientMethod);
+                        Thread.Sleep(200);
+                        Task.Run(TakeListClients);
                     }
                     catch (Exception e)
                     {
@@ -226,7 +235,7 @@ namespace CrackaSmile.ViewModels
 
         }
 
-        private void Search()
+        public void Search()
         {
             var search = SearchText.ToLower();
             Task.Run(LoadEntities);
@@ -234,6 +243,7 @@ namespace CrackaSmile.ViewModels
             c.LastName.ToLower().Contains(search) ||
             c.FatherName.ToLower().Contains(search) ||
             c.Address.ToLower().Contains(search) ||
+            c.Telephone.ToLower().Contains(search) ||
             c.Email.ToLower().Contains(search)).ToList();
 
             //Sort();
@@ -244,14 +254,16 @@ namespace CrackaSmile.ViewModels
         public async Task TakeListClients()
         {
             var result = await Api.GetListAsync<ClientApi[]>("Client");
-            clients = new List<ClientApi>(result);
-            SignalChanged("clients");
+            Clients = new List<ClientApi>(result);
             searchResult = new List<ClientApi>(result);
+
+            
         }
+
 
         public async Task DeleteClientMethod()
         {
-            await Api.DeleteAsync<ClientApi>(selectedClient,"Client");
+            await Api.DeleteAsync<ClientApi>(SelectedClient,"Client");
         }
 
         public async Task LoadEntities()

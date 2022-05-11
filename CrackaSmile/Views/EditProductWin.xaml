@@ -102,11 +102,15 @@
                             <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
+                            <RowDefinition Height="60"/>
                             <RowDefinition/>
                             <RowDefinition Height="75"/>
                         </Grid.RowDefinitions>
 
-                        <ListBox Grid.Column="0" ItemsSource="{Binding mynew}" Name="list" HorizontalContentAlignment="Stretch" SelectionMode="Extended">
+                        <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Center">
+                            <Label Content="Местоположение товара:" HorizontalAlignment="Center" FontSize="22"  FontWeight="Bold"/>
+                        </StackPanel>
+                        <ListBox Grid.Column="0" Grid.Row="1" ItemsSource="{Binding mynew}" SelectedItem="{Binding SelectedMyNew}" HorizontalContentAlignment="Stretch" SelectionMode="Extended">
                             <ListBox.ItemTemplate>
                                 <DataTemplate >
                                     <Grid>
@@ -136,22 +140,51 @@
                             </ListBox.ItemTemplate>
                         </ListBox>
 
-                        <ListBox Grid.Column="1" ItemsSource="{Binding partOfWarehouse}"  HorizontalContentAlignment="Stretch" SelectionMode="Extended">
+                        <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center">
+                            <Label Content="Список мест:" HorizontalAlignment="Center" FontSize="22"  FontWeight="Bold"/>
+                        </StackPanel>
+                        <ListBox Grid.Column="1" Grid.Row="1" ItemsSource="{Binding allParts}" SelectedItem="{Binding SelectedAllPart}" HorizontalContentAlignment="Stretch" SelectionMode="Extended">
                             <ListBox.ItemTemplate>
                                 <DataTemplate >
                                     <Grid>
-                                        <StackPanel  Orientation="Vertical" HorizontalAlignment="Left">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="auto"/>
+                                            <ColumnDefinition />
+                                            <ColumnDefinition/>
+                                        </Grid.ColumnDefinitions>
+                                        <StackPanel Grid.Column="1" Orientation="Vertical" HorizontalAlignment="Left">
                                             <StackPanel Orientation="Horizontal">
-                                                <Label Content="{Binding PartOfWarehouse.Title}"/>
+                                                <Label Content="Наименование:"/>
+                                                <Label Content="{Binding Title}"/>
                                             </StackPanel>
+                                            <StackPanel Orientation="Horizontal">
+                                                <Label Content="Места свободно:"/>
+                                                <Label Content="{Binding Space}"/>
+                                            </StackPanel>
+                                            <!--<StackPanel Orientation="Horizontal">
+                                                <Label Content="Положили сюда2:"/>
+                                                <Label Content="{Binding PartOfWareHouse.Title}"/>
+                                            </StackPanel>-->
                                         </StackPanel>
                                     </Grid>
+
                                 </DataTemplate>
                             </ListBox.ItemTemplate>
                         </ListBox>
+                        
+                        <StackPanel Grid.Row="0" Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Center" >
+                            <Label Content="Всего единиц товара:" HorizontalAlignment="Center" FontSize="22"  FontWeight="Bold"/>
+                            <Label Content="{Binding AddProduct.Count}" FontSize="24" FontWeight="Bold" />
+                        </StackPanel>
+                        
+                        <StackPanel Grid.Row="1" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <Label Content="Количество товара" FontSize="24"  />
+                            <TextBox Text="{Binding SelectedCountOfProduct}" Width="200" Padding="3"/>
+                        </StackPanel>
 
-                        <StackPanel Grid.Row="1" Grid.Column="2">
+                        <StackPanel Grid.Row="2" Grid.Column="2">
                             <Button Command="{Binding Add}" Content="Добавить" Width="170" Height="35" VerticalContentAlignment="Center"  FontSize="18" VerticalAlignment="Center" HorizontalAlignment="Center" Cursor="Hand" />
+                            <Button Command="{Binding TakeOff}" Content="Снять" Width="170" Height="35" VerticalContentAlignment="Center"  FontSize="18" VerticalAlignment="Center" HorizontalAlignment="Center" Cursor="Hand" />
                         </StackPanel>
                     </Grid>
                 </TabItem.Content>

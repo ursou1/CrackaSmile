@@ -252,7 +252,7 @@ namespace CrackaSmile.ViewModels
             products = new List<ProductApi>(result);
             SignalChanged("products");
             searchResult = new List<ProductApi>(result);
-
+            
             var result1 = await Api.GetListAsync<DeliveryNoteApi[]>("DeliveryNote");
             deliveryNotes = new List<DeliveryNoteApi>(result1);
             SignalChanged("deliveryNotes");
