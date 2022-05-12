@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -129,7 +130,6 @@ namespace CrackaSmile.ViewModels
         {
             Task.Run(TakeListDeliveryNotes).ContinueWith(s =>
             {
-                Task.Run(TakeListProviders);
                 InitPagination();
                 Pagination();
             });
@@ -143,10 +143,10 @@ namespace CrackaSmile.ViewModels
             selectedSearchType = SearchType.First();
 
             SortTypes = new List<string>();
-            SortTypes.AddRange(new string[] { "По умолчанию", "По алфавиту: А-Я", "По алфавиту: Я-А" });
+            SortTypes.AddRange(new string[] { "По умолчанию", "По дате: новые", "По дате: старые"});
             selectedSortType = SortTypes.First();
 
-            Task.Run(LoadEntities);
+            //Task.Run(LoadEntities);
 
             #region команды по работе с записями
 
@@ -159,8 +159,10 @@ namespace CrackaSmile.ViewModels
 
             AddDeliveryNote = new CustomCommand(() =>
             {
-                EditDeliveryNoteWin editProvider = new EditDeliveryNoteWin();
-                editProvider.ShowDialog();
+                EditDeliveryNoteWin editDeliveryNote = new EditDeliveryNoteWin();
+                editDeliveryNote.ShowDialog();
+                Thread.Sleep(200);
+                Task.Run(TakeListDeliveryNotes);
             });
 
             EditDeliveryNote = new CustomCommand(() =>
@@ -168,6 +170,8 @@ namespace CrackaSmile.ViewModels
                 if (SelectedDeliveryNote == null) return;
                 EditDeliveryNoteWin editDeliveryNote = new EditDeliveryNoteWin(SelectedDeliveryNote);
                 editDeliveryNote.ShowDialog();
+                Thread.Sleep(200);
+                Task.Run(TakeListDeliveryNotes);
             });
 
             DeleteDeliveryNote = new CustomCommand(() =>
@@ -225,9 +229,9 @@ namespace CrackaSmile.ViewModels
 
             if (SelectedSortType == "По умолчанию")
                 return;
-            else if (SelectedSortType == "По алфавиту: А-Я")
+            else if (SelectedSortType == "По дате: старые")
                 searchResult.Sort((x, y) => x.DeliveryDate.CompareTo(y.DeliveryDate));
-            else if (SelectedSortType == "По алфавиту: Я-А")
+            else if (SelectedSortType == "По дате: новые")
                 searchResult.Sort((x, y) => y.DeliveryDate.CompareTo(x.DeliveryDate));
 
             paginationPageIndex = 0;
@@ -238,7 +242,7 @@ namespace CrackaSmile.ViewModels
         private void Search()
         {
             var search = SearchText.ToLower();
-            Task.Run(LoadEntities);
+            //Task.Run(TakeListDeliveryNotes);
             searchResult = mysearch.Where(c => c.Number.ToString().Contains(search) ||
             c.DeliveryDate.ToString().Contains(search) ||
             c.Provider.Name.ToLower().Contains(search)).ToList();
@@ -250,26 +254,20 @@ namespace CrackaSmile.ViewModels
         public async Task TakeListDeliveryNotes()
         {
             var result = await Api.GetListAsync<DeliveryNoteApi[]>("DeliveryNote");
-            deliveryNotes = new List<DeliveryNoteApi>(result);
-            SignalChanged("deliveryNotes");
-            searchResult = new List<DeliveryNoteApi>(result);
+            DeliveryNotes = new List<DeliveryNoteApi>(result);
             
             var result1 = await Api.GetListAsync<ProviderApi[]>("Provider");
             providers = new List<ProviderApi>(result1);
-            SignalChanged("providers");
-            foreach (var deliveryNote in deliveryNotes)
+
+            foreach (var deliveryNote in DeliveryNotes)
             {
                 deliveryNote.Provider = providers.First(s => s.Id == deliveryNote.ProviderId);
             }
            
+            searchResult = new List<DeliveryNoteApi>(DeliveryNotes);
+            mysearch = new List<DeliveryNoteApi>(DeliveryNotes);
         }
 
-        public async Task TakeListProviders()
-        {
-            var result1 = await Api.GetListAsync<ProviderApi[]>("Provider");
-            providers = new List<ProviderApi>(result1);
-            SignalChanged("providers");
-        }
 
         public async Task DeleteDeliveryNoteMethod()
         {
@@ -280,14 +278,14 @@ namespace CrackaSmile.ViewModels
         {
             var result = await Api.GetListAsync<DeliveryNoteApi[]>("DeliveryNote");
             mysearch = new List<DeliveryNoteApi>(result);
-            deliveryNotes = new List<DeliveryNoteApi>(result);
-            var result1 = await Api.GetListAsync<ProviderApi[]>("Provider");
-            providers = new List<ProviderApi>(result1);
-            SignalChanged("providers");
-            foreach (var deliveryNote in deliveryNotes)
-            {
-                deliveryNote.Provider = providers.First(s => s.Id == deliveryNote.ProviderId);
-            }
+            DeliveryNotes = new List<DeliveryNoteApi>(result);
+            //var result1 = await Api.GetListAsync<ProviderApi[]>("Provider");
+            //providers = new List<ProviderApi>(result1);
+            //SignalChanged("providers");
+            //foreach (var deliveryNote in deliveryNotes)
+            //{
+            //    deliveryNote.Provider = providers.First(s => s.Id == deliveryNote.ProviderId);
+            //}
         }
 
         private void InitPagination()

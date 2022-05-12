@@ -17,7 +17,7 @@
             <TextBox Text="{Binding Number}" Width="200" FontSize="20"/>
 
             <Label Content="DeliveryDate:" FontSize="20" HorizontalAlignment="Center" Margin="0 5 0 5"/>
-            <TextBox Text="{Binding DeliveryDate}" Width="200" FontSize="20"/>
+            <TextBox Text="{Binding DeliveryDate, StringFormat='{}{0:dd/MM/yyyy}'}" Width="200" FontSize="20"/>
 
             <Label Content="Поставщик:" FontSize="20" HorizontalAlignment="Center" Margin="0 5 0 5"/>
         </StackPanel>
