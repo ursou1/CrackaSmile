@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -127,7 +128,7 @@ namespace CrackaSmile.ViewModels
         {
             Task.Run(TakeListProducts).ContinueWith(s =>
             {
-                Task.Run(TakeListDeliveryNotes);
+                //Task.Run(TakeListDeliveryNotes);
                 InitPagination();
                 Pagination();
             });
@@ -144,7 +145,7 @@ namespace CrackaSmile.ViewModels
             SortTypes.AddRange(new string[] { "По умолчанию", "По алфавиту: А-Я", "По алфавиту: Я-А" });
             selectedSortType = SortTypes.First();
 
-            Task.Run(LoadEntities);
+            //Task.Run(LoadEntities);
 
             #region команды по работе с записями
 
@@ -153,6 +154,8 @@ namespace CrackaSmile.ViewModels
             {
                 EditProductWin editProduct = new EditProductWin();
                 editProduct.ShowDialog();
+                Thread.Sleep(200);
+                Task.Run(TakeListProducts);
             });
 
             InfoProduct = new CustomCommand(() =>
@@ -167,6 +170,8 @@ namespace CrackaSmile.ViewModels
                 if (SelectedProduct == null) return;
                 EditProductWin editProduct = new EditProductWin(SelectedProduct);
                 editProduct.ShowDialog();
+                Thread.Sleep(200);
+                Task.Run(TakeListProducts);
             });
 
             DeleteProduct = new CustomCommand(() =>
@@ -236,10 +241,9 @@ namespace CrackaSmile.ViewModels
         private void Search()
         {
             var search = SearchText.ToLower();
-            Task.Run(LoadEntities);
-            searchResult = mysearch.Where(c => c.Name.ToString().Contains(search) ||
-            c.Price.ToString().Contains(search) ||
-            c.Code.ToLower().Contains(search)).ToList();
+            //Task.Run(LoadEntities);
+            searchResult = mysearch.Where(c => c.Name.ToLower().Contains(search) ||
+            c.Code.Contains(search)).ToList();//c.DeliveryNote.Number.ToString().Contains(search) ||
 
             Sort();
             InitPagination();
@@ -249,27 +253,20 @@ namespace CrackaSmile.ViewModels
         public async Task TakeListProducts()
         {
             var result = await Api.GetListAsync<ProductApi[]>("Product");
-            products = new List<ProductApi>(result);
-            SignalChanged("products");
-            searchResult = new List<ProductApi>(result);
+            Products = new List<ProductApi>(result);
             
             var result1 = await Api.GetListAsync<DeliveryNoteApi[]>("DeliveryNote");
             deliveryNotes = new List<DeliveryNoteApi>(result1);
-            SignalChanged("deliveryNotes");
             
-            foreach (var product in products)
+            foreach (var product in Products)
             {
                 product.DeliveryNote = deliveryNotes.First(s => s.Id == product.DeliveryNoteId);
             }
+
+            searchResult = new List<ProductApi>(Products);
+            mysearch = new List<ProductApi>(Products);
         }
         
-        public async Task TakeListDeliveryNotes()
-        {
-            var result1 = await Api.GetListAsync<DeliveryNoteApi[]>("DeliveryNote");
-            deliveryNotes = new List<DeliveryNoteApi>(result1);
-            SignalChanged("deliveryNotes");
-        }
-
         public async Task DeleteProductMethod()
         {
             await Api.DeleteAsync<ProductApi>(selectedProduct, "Product");
@@ -279,15 +276,7 @@ namespace CrackaSmile.ViewModels
         {
             var result = await Api.GetListAsync<ProductApi[]>("Product");
             mysearch = new List<ProductApi>(result);
-            products = new List<ProductApi>(result);
-            var result1 = await Api.GetListAsync<DeliveryNoteApi[]>("DeliveryNote");
-            deliveryNotes = new List<DeliveryNoteApi>(result1);
-            SignalChanged("deliveryNotes");
-            foreach (var product in products)
-            {
-                product.DeliveryNote = deliveryNotes.First(s => s.Id == product.DeliveryNoteId);
-            }
-            
+            Products = new List<ProductApi>(result);
         }
 
         private void InitPagination()

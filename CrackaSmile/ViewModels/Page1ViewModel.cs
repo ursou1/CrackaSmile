@@ -1,4 +1,5 @@
 ﻿using LiveChartsCore;
+using LiveChartsCore.SkiaSharpView;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,12 +10,12 @@ namespace CrackaSmile.ViewModels
 {
     public class Page1ViewModel
     {
-        //public ISeries[] Series { get; set; }
-        //    = new ISeries[]
-        //    {
-        //        new PieSeries<double> {  Values = new double[] { zanatiemesta } },
-        //        new PieSeries<double> { Values = new double[] { placecount } }
-        //    };
+        public ISeries[] Series { get; set; }
+            = new ISeries[]
+            {
+                new PieSeries<double> { Name = "Sava", Values = new double[] { 2 } },//zanatiemesta
+                new PieSeries<double> { Name = "Dima", Values = new double[] { 1 } }//placecount
+            };
         public Page1ViewModel()
         {
             //Task.Run(TakeListProviders).ContinueWith(s =>

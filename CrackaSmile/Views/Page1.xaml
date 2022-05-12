@@ -4,15 +4,33 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:CrackaSmile.Views"
-      
-      mc:Ignorable="d" 
-      d:DesignHeight="450" d:DesignWidth="800"
-      Title="Page1">
+      xmlns:local1="clr-namespace:CrackaSmile.ViewModels"
+      xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF" >
 
+        <Page.DataContext>
+            <local1:Page1ViewModel />
+        </Page.DataContext>
+    
     <Grid>
-        <StackPanel  Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <!--<StackPanel  Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center">
             <TextBlock Text="Приложение " FontSize="25" FontFamily="DFKai-SB"  Margin="0,0,0,200"/>
-        </StackPanel>
-        
+        </StackPanel>-->
+
+        <!--<lvc:CartesianChart
+            Grid.Row="0"
+        Series="{Binding Series}">
+        </lvc:CartesianChart>-->
+        <lvc:PieChart
+            Grid.Row="1"
+            x:Name="pieChart"
+            Series="{Binding Series}">
+        </lvc:PieChart>
     </Grid>
+
+
 </Page>
