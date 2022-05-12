@@ -27,10 +27,10 @@
                     <Label Content="Поиск:"/>
                     <TextBox Width="200" Grid.Row="1" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"/>
                 </StackPanel>
-                <StackPanel Grid.Column="1" HorizontalAlignment="Left" Margin="4">
+                <!--<StackPanel Grid.Column="1" HorizontalAlignment="Left" Margin="4">
                     <Label Content="Фильтрация по типу"/>
                     <ComboBox Width="200" DisplayMemberPath="Title" ItemsSource="{Binding MaterialTypeFilter}" SelectedItem="{Binding SelectedMaterialTypeFilter}"/>
-                </StackPanel>
+                </StackPanel>-->
 
                 <StackPanel Grid.Column="1"  HorizontalAlignment="Left" Margin="4">
                     <Label Content="Сортировка по типу"/>
