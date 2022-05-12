@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -128,7 +129,7 @@ namespace CrackaSmile.ViewModels
         {
             Task.Run(TakeListDepartNotes).ContinueWith(s =>
             {
-                Task.Run(TakeListClients);
+                //Task.Run(TakeListClients);
                 InitPagination();
                 Pagination();
             });
@@ -142,10 +143,10 @@ namespace CrackaSmile.ViewModels
             selectedSearchType = SearchType.First();
 
             SortTypes = new List<string>();
-            SortTypes.AddRange(new string[] { "По умолчанию", "По алфавиту: А-Я", "По алфавиту: Я-А" });
+            SortTypes.AddRange(new string[] { "По умолчанию", "По дате: новые", "По дате: старые"});
             selectedSortType = SortTypes.First();
 
-            Task.Run(LoadEntities);
+            //Task.Run(LoadEntities);
 
             #region команды по работе с записями
 
@@ -160,6 +161,8 @@ namespace CrackaSmile.ViewModels
             {
                 EditDepartNoteWin editDepartNote = new EditDepartNoteWin();
                 editDepartNote.ShowDialog();
+                Thread.Sleep(200);
+                Task.Run(TakeListDepartNotes);
             });
 
             EditDepartNote = new CustomCommand(() =>
@@ -167,6 +170,8 @@ namespace CrackaSmile.ViewModels
                 if (SelectedDepartNote == null) return;
                 EditDepartNoteWin editDepartNote = new EditDepartNoteWin(SelectedDepartNote);
                 editDepartNote.ShowDialog();
+                Thread.Sleep(200);
+                Task.Run(TakeListDepartNotes);
             });
 
             DeleteDepartNote = new CustomCommand(() =>
@@ -223,9 +228,9 @@ namespace CrackaSmile.ViewModels
 
             if (SelectedSortType == "По умолчанию")
                 return;
-            else if (SelectedSortType == "По алфавиту: А-Я")
+            else if (SelectedSortType == "По дате: старые")
                 searchResult.Sort((x, y) => x.DepartDate.CompareTo(y.DepartDate));
-            else if (SelectedSortType == "По алфавиту: Я-А")
+            else if (SelectedSortType == "По дате: новые")
                 searchResult.Sort((x, y) => y.DepartDate.CompareTo(x.DepartDate));
 
             paginationPageIndex = 0;
@@ -235,7 +240,7 @@ namespace CrackaSmile.ViewModels
         private void Search()
         {
             var search = SearchText.ToLower();
-            Task.Run(LoadEntities);
+            //Task.Run(LoadEntities);
             searchResult = mysearch.Where(c => c.Number.ToString().Contains(search) ||
             c.DepartDate.ToString().Contains(search) ||
             c.Client.Name.ToLower().Contains(search)).ToList();
@@ -248,25 +253,18 @@ namespace CrackaSmile.ViewModels
         public async Task TakeListDepartNotes()
         {
             var result = await Api.GetListAsync<DepartNoteApi[]>("DepartNote");
-            departNotes = new List<DepartNoteApi>(result);
-            SignalChanged("departNotes");
-            searchResult = new List<DepartNoteApi>(result);
+            DepartNotes = new List<DepartNoteApi>(result);
 
             var result1 = await Api.GetListAsync<ClientApi[]>("Client");
             clients = new List<ClientApi>(result1);
-            SignalChanged("clients");
-            foreach (var departNote in departNotes)
+
+            foreach (var departNote in DepartNotes)
             {
                 departNote.Client = clients.First(s => s.Id == departNote.ClientId);
             }
 
-        }
-
-        public async Task TakeListClients()
-        {
-            var result1 = await Api.GetListAsync<ClientApi[]>("Client");
-            clients = new List<ClientApi>(result1);
-            SignalChanged("clients");
+            searchResult = new List<DepartNoteApi>(DepartNotes);
+            mysearch = new List<DepartNoteApi>(DepartNotes);
         }
 
         public async Task DeleteDepartNoteMethod()
@@ -279,13 +277,6 @@ namespace CrackaSmile.ViewModels
             var result = await Api.GetListAsync<DepartNoteApi[]>("DepartNote");
             mysearch = new List<DepartNoteApi>(result);
             departNotes = new List<DepartNoteApi>(result);
-            var result1 = await Api.GetListAsync<ClientApi[]>("Client");
-            clients = new List<ClientApi>(result1);
-            SignalChanged("clients");
-            foreach (var departNote in departNotes)
-            {
-                departNote.Client = clients.First(s => s.Id == departNote.ClientId);
-            }
         }
 
         private void InitPagination()

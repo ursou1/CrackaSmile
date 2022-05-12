@@ -32,7 +32,7 @@
                     <ComboBox Width="200" DisplayMemberPath="Title" ItemsSource="{Binding MaterialTypeFilter}" SelectedItem="{Binding SelectedMaterialTypeFilter}"/>
                 </StackPanel>-->
 
-                <StackPanel Grid.Column="1"  HorizontalAlignment="Left" Margin="4">
+                <StackPanel Grid.Column="1"  HorizontalAlignment="Left" Margin="20, 0 , 0 , 0" >
                     <Label Content="Сортировка по типу"/>
                     <ComboBox Width="200" ItemsSource="{Binding SortTypes}" SelectedItem="{Binding SelectedSortType}"/>
                 </StackPanel>
