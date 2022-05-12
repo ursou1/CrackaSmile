@@ -246,7 +246,7 @@ namespace CrackaSmile.ViewModels
             c.Telephone.ToLower().Contains(search) ||
             c.Email.ToLower().Contains(search)).ToList();
 
-            //Sort();
+            Sort();
             InitPagination();
             Pagination();
         }
