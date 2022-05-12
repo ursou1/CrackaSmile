@@ -11,7 +11,7 @@
         Style="{StaticResource CustomWindowStyle}">
     <Grid>
         <StackPanel DataContext="{Binding AddClient}" >
-            <Label Content="Добавить нового клиента:" FontSize="22" HorizontalAlignment="Center" Margin="50 50 0 0" FontWeight="Bold"/>
+            <Label Content="Добавить нового клиента:" FontSize="22" HorizontalAlignment="Center" Margin="50 50 50 0" FontWeight="Bold"/>
 
             <Label Content="Имя:" FontSize="20" HorizontalAlignment="Center" Margin="0 5 0 5"/>
                 <TextBox Text="{Binding Name}" Width="200" FontSize="20"/>
@@ -25,7 +25,7 @@
             <Label Content="Адрес:" FontSize="20" HorizontalAlignment="Center" Margin="0 5 0 5"/>
                 <TextBox Text="{Binding Address}" Width="200" FontSize="20"/>
 
-            <Label Content="Почта:" FontSize="20" HorizontalAlignment="Center" Margin="0 5 0 5"/>
+            <Label Content="Почтовый адрес:" FontSize="20" HorizontalAlignment="Center" Margin="0 5 0 5"/>
                 <TextBox Text="{Binding Email}" Width="200" FontSize="20"/>
 
             <Label Content="Контактные данные:" FontSize="20" HorizontalAlignment="Center" Margin="0 5 0 5"/>

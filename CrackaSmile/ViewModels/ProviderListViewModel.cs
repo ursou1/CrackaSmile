@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -152,6 +153,8 @@ namespace CrackaSmile.ViewModels
             {
                 EditProviderWin editProvider = new EditProviderWin();
                 editProvider.ShowDialog();
+                Thread.Sleep(200);
+                Task.Run(TakeListProviders);
             });
 
             EditProvider = new CustomCommand(() =>
@@ -159,6 +162,8 @@ namespace CrackaSmile.ViewModels
                 if (SelectedProvider == null) return;
                 EditProviderWin editProvider = new EditProviderWin(SelectedProvider);
                 editProvider.ShowDialog();
+                Thread.Sleep(200);
+                Task.Run(TakeListProviders);
             });
 
             DeleteProvider = new CustomCommand(() =>
@@ -169,6 +174,8 @@ namespace CrackaSmile.ViewModels
                     try
                     {
                         Task.Run(DeleteProviderMethod);
+                        Thread.Sleep(200);
+                        Task.Run(TakeListProviders);
                     }
                     catch (Exception e)
                     {
@@ -234,7 +241,7 @@ namespace CrackaSmile.ViewModels
             c.Telephone.ToLower().Contains(search) ||
             c.Email.ToLower().Contains(search)).ToList();
 
-            //Sort();
+            Sort();
             InitPagination();
             Pagination();
         }
