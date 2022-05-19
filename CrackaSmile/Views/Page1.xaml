@@ -30,6 +30,10 @@
             x:Name="pieChart"
             Series="{Binding Series}">
         </lvc:PieChart>
+        <StackPanel Grid.Row="2">
+        <Button Content="qwe" Command="{Binding count}" Width="100" Height="50"/>
+            
+        </StackPanel>
     </Grid>
 
 

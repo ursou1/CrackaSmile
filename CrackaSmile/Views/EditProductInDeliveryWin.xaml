@@ -70,7 +70,7 @@
             </ListBox.ItemTemplate>
         </ListBox>
 
-        <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="3 5 3 3">
+        <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="3 5 3 3" Height="35">
             <Label Content="{Binding SearchCountRows}"/>
             <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
                 <Button Content="&lt;" Width="20" Command="{Binding BackPage}" Margin="4"/>
@@ -79,7 +79,7 @@
             </StackPanel>
             <StackPanel Orientation="Horizontal" Grid.Column="2" HorizontalAlignment="Right">
                 <Label Content="Кол-во записей на странице:" Margin="4"/>
-                <ComboBox Width="200" ItemsSource="{Binding ViewCountRows}" SelectedItem="{Binding SelectedViewCountRows}" Margin="4"/>
+                <!--<ComboBox Width="200" ItemsSource="{Binding ViewCountRows}" SelectedItem="{Binding SelectedViewCountRows}" Margin="4"/>-->
             </StackPanel>
         </StackPanel>
 
@@ -122,7 +122,7 @@
             </ListBox.ItemTemplate>
         </ListBox>
 
-        <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal" Margin="3 5 3 3">
+        <!--<StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal" Margin="3 5 3 3">
             <Label Content="{Binding SearchCountRows}"/>
             <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
                 <Button Content="&lt;" Width="20" Command="{Binding BackPage}" Margin="4"/>
@@ -133,7 +133,7 @@
                 <Label Content="Кол-во записей на странице:" Margin="4"/>
                 <ComboBox Width="200" ItemsSource="{Binding ViewCountRows}" SelectedItem="{Binding SelectedViewCountRows}" Margin="4"/>
             </StackPanel>
-        </StackPanel>
+        </StackPanel>-->
 
         <!--#endregion Second List-->
 

@@ -116,7 +116,7 @@ namespace CrackaSmile.ViewModels
                 SignalChanged();
             }
         }
-
+        public List<ProductPartOfWarehouseApi> list { get; set; } = new List<ProductPartOfWarehouseApi>();//для идентичной записи
         public List<ProductPartOfWarehouseApi> partSelectedCount { get; set; }
         public List<ProductPartOfWarehouseApi> partAllCount { get; set; }
         public List<ProductApi> products { get; set; }
@@ -130,6 +130,8 @@ namespace CrackaSmile.ViewModels
         public CustomCommand SelectImage { get; set; }
         public CustomCommand Add { get; set; }
         public CustomCommand TakeOff { get; set; }
+
+        bool secr;
         #endregion
 
         public EditProductViewModel(ProductApi product)
@@ -179,10 +181,53 @@ namespace CrackaSmile.ViewModels
 
             Add = new CustomCommand(() =>
             {
+                    
                 try
                 {
-                    AddProductInPart = new ProductPartOfWarehouseApi();
-                    Task.Run(AddProductInPartMethod);
+                    #region dump
+
+                    //foreach (var item in mynew)
+                    //{
+                    //    if(mynew.Where(s => s.PartOfWarehouseId == SelectedAllPart.Id).Any())
+                    //    {
+                    //        secr = true;
+                    //    }
+                    //    else
+                    //    {
+                    //        secr = false;
+                    //    }
+                    //}
+                    //foreach (var item in mynew.Where(s=> s.PartOfWarehouseId == SelectedAllPart.Id))
+                    //{
+                    //    item.ProductCount += selectedCountOfProduct;
+                    //}
+                    //if(secr == true)
+                    //{
+                    //    foreach (var part in partAllCount)
+                    //    {
+                    //        if (idProduct == part.ProductId)
+                    //        {
+                    //            part.PartOfWareHouse = allParts.First(s => s.Id == part.PartOfWarehouseId);
+                    //            Mynew.Add(part);
+                    //        }
+
+                    //    }
+                    //}
+                    //else
+                    //{
+                    //    Task.Run(AddProductInPartMethod);
+                    //}
+                    #endregion
+
+                    if (mynew.Where(s => s.PartOfWarehouseId == SelectedAllPart.Id).Any())
+                    {
+                        Task.Run(EditValueMethod);
+                    }
+                    else
+                    {
+                        Task.Run(AddProductInPartMethod);
+                    }
+
                     Thread.Sleep(100);
                     Task.Run(PartCountMethod);
                 }
@@ -249,6 +294,21 @@ namespace CrackaSmile.ViewModels
             await Api.PostAsync<ProductApi>(AddProduct, "Product");
         }
 
+        public async Task EditValueMethod()
+        {
+            AddProductInPart = new ProductPartOfWarehouseApi();
+            foreach (var item in partAllCount)
+            {
+                if(SelectedAllPart.Id == item.PartOfWarehouseId & idProduct == item.ProductId)
+                {
+                    AddProductInPart = item;
+                    AddProductInPart.ProductCount += SelectedCountOfProduct;
+                    break;
+                }
+            }
+            await Api.PutAsync<ProductPartOfWarehouseApi>(AddProductInPart, "ProductPartOfWarehouse");
+        }
+
         public async Task EditProduct()
         {
             AddProduct.ProductTypeId = selectedProductType.Id;
@@ -309,7 +369,6 @@ namespace CrackaSmile.ViewModels
             
 
         }
-
         public async Task TakeOffMethod()
         {
             await Api.DeleteAsync<ProductPartOfWarehouseApi>(SelectedMyNew, "ProductPartOfWarehouse");
@@ -317,10 +376,13 @@ namespace CrackaSmile.ViewModels
 
         public async Task AddProductInPartMethod()
         {
+            
+            AddProductInPart = new ProductPartOfWarehouseApi();
             AddProductInPart.PartOfWarehouseId = SelectedAllPart.Id;
             AddProductInPart.ProductId = idProduct;
             AddProductInPart.ProductCount = SelectedCountOfProduct;
             await Api.PostAsync<ProductPartOfWarehouseApi>(AddProductInPart, "ProductPartOfWarehouse");
+
         }
 
         public void CloseWin(object obj)

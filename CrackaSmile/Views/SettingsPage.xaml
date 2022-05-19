@@ -12,6 +12,9 @@
         <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
         <Label Content="Сменить тему" FontSize="24"/>
         <ComboBox ItemsSource="{Binding Themes}" SelectedItem="{Binding SelectedTheme}" Width="150"/>
+            <Button Content="Темная тема" Height="50" Width="250" Margin="20" Command="{Binding DarkTheme}"/>
+            <Button Content="Светлая тема" Height="50" Width="250" Margin="20" Command="{Binding LightTheme}"/>
+            
         </StackPanel>
     </Grid>
 </Page>

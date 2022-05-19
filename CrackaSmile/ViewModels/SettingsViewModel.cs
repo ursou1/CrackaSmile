@@ -44,7 +44,8 @@ namespace CrackaSmile.ViewModels
             }
         }
         #endregion
-
+        public CustomCommand DarkTheme { get; set; }
+        public CustomCommand LightTheme { get; set; }
         public SettingsViewModel()
         {
             Themes = new ObservableCollection<string>();
@@ -66,6 +67,19 @@ namespace CrackaSmile.ViewModels
             {
                 ThemesController.SetTheme(ThemesController.ThemeTypes.Light);
             });
+
+
+
+            DarkTheme = new CustomCommand(() =>
+            {
+                ThemesController.SetTheme(ThemesController.ThemeTypes.ColourfulDark);
+            });
+            LightTheme = new CustomCommand(() =>
+            {
+                ThemesController.SetTheme(ThemesController.ThemeTypes.ColourfulLight);
+            });
+
+
 
         }
     }

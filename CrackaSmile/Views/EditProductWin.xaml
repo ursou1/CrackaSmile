@@ -182,8 +182,8 @@
                             <TextBox Text="{Binding SelectedCountOfProduct}" Width="200" Padding="3"/>
                         </StackPanel>
 
-                        <StackPanel Grid.Row="2" Grid.Column="2">
-                            <Button Command="{Binding Add}" Content="Добавить" Width="170" Height="35" VerticalContentAlignment="Center"  FontSize="18" VerticalAlignment="Center" HorizontalAlignment="Center" Cursor="Hand" />
+                        <StackPanel Grid.Row="2" Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <Button Command="{Binding Add}" Content="Добавить" Margin="0 0 5 0" Width="170" Height="35" VerticalContentAlignment="Center"  FontSize="18" VerticalAlignment="Center" HorizontalAlignment="Center" Cursor="Hand" />
                             <Button Command="{Binding TakeOff}" Content="Снять" Width="170" Height="35" VerticalContentAlignment="Center"  FontSize="18" VerticalAlignment="Center" HorizontalAlignment="Center" Cursor="Hand" />
                         </StackPanel>
                     </Grid>
