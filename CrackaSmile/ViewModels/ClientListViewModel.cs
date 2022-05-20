@@ -1,5 +1,6 @@
 ﻿using CrackaSmile.Tools;
 using CrackaSmile.Views;
+using Enterwell.Clients.Wpf.Notifications;
 using ModelsApi;
 using System;
 using System.Collections.Generic;
@@ -108,7 +109,51 @@ namespace CrackaSmile.ViewModels
         private string selectedViewCountRows;
         #endregion
 
+        #region alerts
+        public INotificationMessageManager Manager { get; } = new NotificationMessageManager();
+        public void EditClientNotification()
+        {
+            Manager
+                .CreateMessage()
+                .Animates(true)
+                .AnimationInDuration(0.75)
+                .AnimationOutDuration(2)
+                .Accent("#327d0b")
+                .Background("#3E63BB")
+                .HasMessage("Вы изменили клиента.")
+                .Dismiss().WithDelay(TimeSpan.FromSeconds(3))
+                .Queue();
+        }
 
+        public void AddClientNotification()
+        {
+            Manager
+                .CreateMessage()
+                .Animates(true)
+                .AnimationInDuration(0.75)
+                .AnimationOutDuration(2)
+                .Accent("#327d0b")
+                .Background("#EEA75D")
+                .HasMessage("Вы добавили клиента.")
+                .Dismiss().WithDelay(TimeSpan.FromSeconds(3))
+                .Queue();
+        }
+
+        public void DeleteClientNotification()
+        {
+            Manager
+                .CreateMessage()
+                .Animates(true)
+                .AnimationInDuration(0.75)
+                .AnimationOutDuration(2)
+                .Accent("#700d04")
+                .Background("#D74258")
+                .HasMessage("Вы удалили клиента.")
+                .Dismiss().WithDelay(TimeSpan.FromSeconds(3))
+                .Queue();
+        }
+
+        #endregion
 
         #region Commands
         public CustomCommand AddClient { get; set; }
@@ -150,6 +195,7 @@ namespace CrackaSmile.ViewModels
             {
                 EditClientWin editClient = new EditClientWin();
                 editClient.ShowDialog();
+                AddClientNotification();
                 Thread.Sleep(200);
                 Task.Run(TakeListClients);
             });
@@ -159,6 +205,7 @@ namespace CrackaSmile.ViewModels
                 if (SelectedClient == null) return;
                 EditClientWin editClient = new EditClientWin(SelectedClient);
                 editClient.ShowDialog();
+                EditClientNotification();
                 Thread.Sleep(200);
                 Task.Run(TakeListClients);
             });

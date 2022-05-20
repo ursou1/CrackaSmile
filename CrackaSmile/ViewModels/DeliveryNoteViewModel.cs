@@ -1,5 +1,6 @@
 ﻿using CrackaSmile.Tools;
 using CrackaSmile.Views;
+using Enterwell.Clients.Wpf.Notifications;
 using ModelsApi;
 using System;
 using System.Collections.Generic;
@@ -42,6 +43,51 @@ namespace CrackaSmile.ViewModels
 
         #endregion
 
+        #region alerts
+        public INotificationMessageManager Manager { get; } = new NotificationMessageManager();
+        public void EditDelNoteNotification()
+        {
+            Manager
+                .CreateMessage()
+                .Animates(true)
+                .AnimationInDuration(0.75)
+                .AnimationOutDuration(2)
+                .Accent("#327d0b")
+                .Background("#3E63BB")
+                .HasMessage("Вы изменили накладную.")
+                .Dismiss().WithDelay(TimeSpan.FromSeconds(3))
+                .Queue();
+        }
+
+        public void AddDelNoteNotification()
+        {
+            Manager
+                .CreateMessage()
+                .Animates(true)
+                .AnimationInDuration(0.75)
+                .AnimationOutDuration(2)
+                .Accent("#327d0b")
+                .Background("#EEA75D")
+                .HasMessage("Вы добавили накладную.")
+                .Dismiss().WithDelay(TimeSpan.FromSeconds(3))
+                .Queue();
+        }
+
+        public void DeleteDelNoteNotification()
+        {
+            Manager
+                .CreateMessage()
+                .Animates(true)
+                .AnimationInDuration(0.75)
+                .AnimationOutDuration(2)
+                .Accent("#700d04")
+                .Background("#D74258")
+                .HasMessage("Вы удалили накладную.")
+                .Dismiss().WithDelay(TimeSpan.FromSeconds(3))
+                .Queue();
+        }
+
+        #endregion
 
         #region search&sort
         public List<DeliveryNoteApi> mysearch { get; set; }
@@ -155,12 +201,14 @@ namespace CrackaSmile.ViewModels
                 if (SelectedDeliveryNote == null) return;
                 EditProductInDeliveryWin editProductInDeliveryWin = new EditProductInDeliveryWin(SelectedDeliveryNote);
                 editProductInDeliveryWin.ShowDialog();
+                EditDelNoteNotification();
             });
 
             AddDeliveryNote = new CustomCommand(() =>
             {
                 EditDeliveryNoteWin editDeliveryNote = new EditDeliveryNoteWin();
                 editDeliveryNote.ShowDialog();
+                AddDelNoteNotification();
                 Thread.Sleep(200);
                 Task.Run(TakeListDeliveryNotes);
             });
@@ -170,6 +218,7 @@ namespace CrackaSmile.ViewModels
                 if (SelectedDeliveryNote == null) return;
                 EditDeliveryNoteWin editDeliveryNote = new EditDeliveryNoteWin(SelectedDeliveryNote);
                 editDeliveryNote.ShowDialog();
+                EditDelNoteNotification();
                 Thread.Sleep(200);
                 Task.Run(TakeListDeliveryNotes);
             });

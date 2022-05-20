@@ -1,14 +1,17 @@
 ﻿using CrackaSmile.Tools;
 using ModelsApi;
+using QRCoder;
+using QRCoder.Xaml;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media;
 
 namespace CrackaSmile.ViewModels
 {
-    public class ProductInfoViewModel: BaseViewModel
+    public class ProductInfoViewModel : BaseViewModel
     {
         #region properties
         private ProductApi addProduct;
@@ -34,6 +37,8 @@ namespace CrackaSmile.ViewModels
         }
 
         public UnitApi selectedUnit;
+        
+
         public UnitApi SelectedUnit
         {
             get => selectedUnit;
@@ -54,18 +59,30 @@ namespace CrackaSmile.ViewModels
         //        SignalChanged();
         //    }
         //}
+        public DrawingImage qR;
+        public DrawingImage QR
+        {
+            get => qR;
+            set
+            {
+                qR = value;
+                SignalChanged();
+            }
+        }
+
 
         public List<ProductApi> products { get; set; }
         public List<ProductTypeApi> productTypes { get; set; }
         public List<UnitApi> units { get; set; }
         #endregion
-
+        QRCodeGenerator qrGenerator = new QRCodeGenerator();
         #region commands
         public CustomCommand Cancel { get; set; }
         #endregion
 
         public ProductInfoViewModel(ProductApi product)
         {
+            
             Task.Run(TakeListProducts).ContinueWith(s =>
             {
                 AddProduct = new ProductApi
@@ -80,11 +97,13 @@ namespace CrackaSmile.ViewModels
                     UnitId = product.UnitId,
                     ProductTypeId = product.ProductTypeId,
                 };
-
                 SelectedProductType = productTypes.First(s => s.Id == product.ProductTypeId);
                 SelectedUnit = units.First(s => s.Id == product.UnitId);
 
             });
+            QRCodeData qrCodeData = qrGenerator.CreateQrCode("Код" + product.Code + "Наименование"  + product.Name, QRCodeGenerator.ECCLevel.Q);
+            XamlQRCode qrCode = new XamlQRCode(qrCodeData);
+            QR = qrCode.GetGraphic(20);
         }
 
         public async Task TakeListProducts()

@@ -1,5 +1,6 @@
 ﻿using CrackaSmile.Tools;
 using CrackaSmile.Views;
+using Enterwell.Clients.Wpf.Notifications;
 using ModelsApi;
 using System;
 using System.Collections.Generic;
@@ -40,6 +41,51 @@ namespace CrackaSmile.ViewModels
 
         #endregion
 
+        #region alerts
+        public INotificationMessageManager Manager { get; } = new NotificationMessageManager();
+        public void EditProviderNotification()
+        {
+            Manager
+                .CreateMessage()
+                .Animates(true)
+                .AnimationInDuration(0.75)
+                .AnimationOutDuration(2)
+                .Accent("#327d0b")
+                .Background("#3E63BB")
+                .HasMessage("Вы изменили поставщика.")
+                .Dismiss().WithDelay(TimeSpan.FromSeconds(3))
+                .Queue();
+        }
+
+        public void AddProviderNotification()
+        {
+            Manager
+                .CreateMessage()
+                .Animates(true)
+                .AnimationInDuration(0.75)
+                .AnimationOutDuration(2)
+                .Accent("#327d0b")
+                .Background("#EEA75D")
+                .HasMessage("Вы добавили поставщика.")
+                .Dismiss().WithDelay(TimeSpan.FromSeconds(3))
+                .Queue();
+        }
+
+        public void DeleteProviderNotification()
+        {
+            Manager
+                .CreateMessage()
+                .Animates(true)
+                .AnimationInDuration(0.75)
+                .AnimationOutDuration(2)
+                .Accent("#700d04")
+                .Background("#D74258")
+                .HasMessage("Вы удалили поставщика.")
+                .Dismiss().WithDelay(TimeSpan.FromSeconds(3))
+                .Queue();
+        }
+
+        #endregion
 
         #region search&sort
         public List<ProviderApi> mysearch { get; set; }
@@ -153,6 +199,7 @@ namespace CrackaSmile.ViewModels
             {
                 EditProviderWin editProvider = new EditProviderWin();
                 editProvider.ShowDialog();
+                AddProviderNotification();
                 Thread.Sleep(200);
                 Task.Run(TakeListProviders);
             });
@@ -162,6 +209,7 @@ namespace CrackaSmile.ViewModels
                 if (SelectedProvider == null) return;
                 EditProviderWin editProvider = new EditProviderWin(SelectedProvider);
                 editProvider.ShowDialog();
+                EditProviderNotification();
                 Thread.Sleep(200);
                 Task.Run(TakeListProviders);
             });

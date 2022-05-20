@@ -128,9 +128,8 @@ namespace CrackaSmile.ViewModels
         {
             Task.Run(TakeListProducts).ContinueWith(s =>
             {
-                //Task.Run(TakeListDeliveryNotes);
-                InitPagination();
-                Pagination();
+                //InitPagination();
+                //Pagination();
             });
 
             ViewCountRows = new List<string>();
@@ -145,7 +144,7 @@ namespace CrackaSmile.ViewModels
             SortTypes.AddRange(new string[] { "По умолчанию", "По алфавиту: А-Я", "По алфавиту: Я-А" });
             selectedSortType = SortTypes.First();
 
-            //Task.Run(LoadEntities);
+            Task.Run(LoadEntities);//
 
             #region команды по работе с записями
 

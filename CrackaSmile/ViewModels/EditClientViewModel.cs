@@ -90,19 +90,10 @@ namespace CrackaSmile.ViewModels
             await Api.PostAsync<ClientApi>(AddClient, "Client");
         }
 
-        ClientListViewModel cl = new ClientListViewModel();
         public async Task EditClient()
         {
             await Api.PutAsync<ClientApi>(AddClient, "Client");
         }
-
-
-        //public async Task TakeListClients()//вызов клиентов
-        //{
-        //    var result = await Api.GetListAsync<ClientApi[]>("Client");
-        //    Clients = new List<ClientApi>(result);
-        //    SignalChanged("Clients");
-        //}
 
         public void CloseWin(object obj)
         {

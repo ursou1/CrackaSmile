@@ -1,5 +1,6 @@
 ﻿using CrackaSmile.Tools;
 using CrackaSmile.Views;
+using Enterwell.Clients.Wpf.Notifications;
 using ModelsApi;
 using System;
 using System.Collections.Generic;
@@ -38,6 +39,52 @@ namespace CrackaSmile.ViewModels
                 departNotes = value;
                 SignalChanged();
             }
+        }
+
+        #endregion
+
+        #region alerts
+        public INotificationMessageManager Manager { get; } = new NotificationMessageManager();
+        public void EditDepNoteNotification()
+        {
+            Manager
+                .CreateMessage()
+                .Animates(true)
+                .AnimationInDuration(0.75)
+                .AnimationOutDuration(2)
+                .Accent("#327d0b")
+                .Background("#3E63BB")
+                .HasMessage("Вы изменили поставщика.")
+                .Dismiss().WithDelay(TimeSpan.FromSeconds(3))
+                .Queue();
+        }
+
+        public void AddDepNoteNotification()
+        {
+            Manager
+                .CreateMessage()
+                .Animates(true)
+                .AnimationInDuration(0.75)
+                .AnimationOutDuration(2)
+                .Accent("#327d0b")
+                .Background("#EEA75D")
+                .HasMessage("Вы добавили поставщика.")
+                .Dismiss().WithDelay(TimeSpan.FromSeconds(3))
+                .Queue();
+        }
+
+        public void DeleteDepNoteNotification()
+        {
+            Manager
+                .CreateMessage()
+                .Animates(true)
+                .AnimationInDuration(0.75)
+                .AnimationOutDuration(2)
+                .Accent("#700d04")
+                .Background("#D74258")
+                .HasMessage("Вы удалили поставщика.")
+                .Dismiss().WithDelay(TimeSpan.FromSeconds(3))
+                .Queue();
         }
 
         #endregion
@@ -155,12 +202,14 @@ namespace CrackaSmile.ViewModels
                 if (SelectedDepartNote == null) return;
                 EditProductInDepartWin editProductInDepartWin = new EditProductInDepartWin(SelectedDepartNote);
                 editProductInDepartWin.ShowDialog();
+                EditDepNoteNotification();
             });
 
             AddDepartNote = new CustomCommand(() =>
             {
                 EditDepartNoteWin editDepartNote = new EditDepartNoteWin();
                 editDepartNote.ShowDialog();
+                AddDepNoteNotification();
                 Thread.Sleep(200);
                 Task.Run(TakeListDepartNotes);
             });
@@ -170,6 +219,7 @@ namespace CrackaSmile.ViewModels
                 if (SelectedDepartNote == null) return;
                 EditDepartNoteWin editDepartNote = new EditDepartNoteWin(SelectedDepartNote);
                 editDepartNote.ShowDialog();
+                EditDepNoteNotification();
                 Thread.Sleep(200);
                 Task.Run(TakeListDepartNotes);
             });
