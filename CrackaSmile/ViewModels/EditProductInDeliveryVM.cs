@@ -26,7 +26,6 @@ namespace CrackaSmile.ViewModels
         }
 
         public ProductApi selectedProductInNote;
-
         public ProductApi SelectedProductInNote
         {
             get => selectedProductInNote;
@@ -222,18 +221,7 @@ namespace CrackaSmile.ViewModels
 
         }
 
-
-        private void Search()
-        {
-            var search = SearchText.ToLower();
-            //Task.Run(TakeListProducts);
-            //Task.Run(LoadEntities);
-            searchResult = mysearch.Where(c => c.Name.Contains(search) ||
-            c.Code.ToLower().Contains(search)).ToList();
-
-            InitPagination();
-            Pagination();
-        }
+        
         public async Task EditProduct()
         {
             await Api.PutAsync<ProductApi>(SelectedProduct, "Product");
@@ -266,7 +254,7 @@ namespace CrackaSmile.ViewModels
             }
 
             ProductFree = new List<ProductApi>();
-            foreach (var item in products)
+            foreach (var item in Products)
             {
                 if (item.DeliveryNoteId.HasValue)
                 {
@@ -285,13 +273,19 @@ namespace CrackaSmile.ViewModels
             searchResult = new List<ProductApi>(ProductFree);
         }
 
-        public async Task CountListMethod()
-        {
-            Thread.Sleep(200);
-        }
-
-
         #region other for search
+
+        private void Search()
+        {
+            var search = SearchText.ToLower();
+            //Task.Run(TakeListProducts);
+            //Task.Run(LoadEntities);
+            searchResult = mysearch.Where(c => c.Name.Contains(search) ||
+            c.Code.ToLower().Contains(search)).ToList();
+
+            InitPagination();
+            Pagination();
+        }
 
         private void InitPagination()
         {
