@@ -13,6 +13,7 @@ namespace CrackaSmile.ViewModels
 {
     public class ProductInfoViewModel : BaseViewModel
     {
+
         #region properties
         private ProductApi addProduct;
         public ProductApi AddProduct

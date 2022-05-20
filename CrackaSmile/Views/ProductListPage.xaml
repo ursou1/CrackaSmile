@@ -46,7 +46,7 @@
         </Grid>
 
 
-        <ListBox Grid.Row="1" ItemsSource="{Binding products}" Name="list" SelectedItem="{Binding SelectedProduct}" HorizontalContentAlignment="Stretch" SelectionMode="Extended">
+        <ListBox Grid.Row="1" ItemsSource="{Binding products}"  SelectedItem="{Binding SelectedProduct}" HorizontalContentAlignment="Stretch" SelectionMode="Extended">
             <ListBox.ItemTemplate>
                 <DataTemplate >
                     <Grid>
@@ -89,6 +89,7 @@
 
                 </DataTemplate>
             </ListBox.ItemTemplate>
+            
             <ListBox.ContextMenu>
                 <ContextMenu>
                     <MenuItem Header="Редактировать" Command="{Binding EditProduct}" Padding="5"/>
