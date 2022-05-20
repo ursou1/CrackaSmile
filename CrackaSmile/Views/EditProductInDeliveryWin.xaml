@@ -36,8 +36,8 @@
         <!--#endregion First Row-->
 
         <!--#region First List-->
-        
-        <ListBox Grid.Row="1" ItemsSource="{Binding products}" Name="list" SelectedItem="{Binding SelectedProduct}" HorizontalContentAlignment="Stretch" SelectionMode="Extended">
+
+        <ListBox Grid.Row="1" ItemsSource="{Binding productFree}" Name="list" SelectedItem="{Binding SelectedProduct}" HorizontalContentAlignment="Stretch" SelectionMode="Extended">
             <ListBox.ItemTemplate>
                 <DataTemplate >
                     <Grid>
@@ -70,15 +70,15 @@
             </ListBox.ItemTemplate>
         </ListBox>
 
-        <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="3 5 3 3" Height="35">
+        <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="3 5 3 3" Height="35" HorizontalAlignment="Center">
             <Label Content="{Binding SearchCountRows}"/>
-            <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
+            <StackPanel Grid.Column="1" Orientation="Horizontal"  HorizontalAlignment="Center">
                 <Button Content="&lt;" Width="20" Command="{Binding BackPage}" Margin="4"/>
                 <Label Content="{Binding Pages}" Margin="4"/>
                 <Button Content=">" Width="20" Command="{Binding ForwardPage}" Margin="4"/>
             </StackPanel>
             <StackPanel Orientation="Horizontal" Grid.Column="2" HorizontalAlignment="Right">
-                <Label Content="Кол-во записей на странице:" Margin="4"/>
+                <!--<Label Content="Кол-во записей на странице:" Margin="4"/>-->
                 <!--<ComboBox Width="200" ItemsSource="{Binding ViewCountRows}" SelectedItem="{Binding SelectedViewCountRows}" Margin="4"/>-->
             </StackPanel>
         </StackPanel>
@@ -138,8 +138,9 @@
         <!--#endregion Second List-->
 
         <!--#region Down panel-->
-        <StackPanel  Grid.Row="3" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center">
-            <Button Content="Добавить" Command="{Binding AddProductInNote}" Width="170" Height="35"   FontSize="18"  Cursor="Hand"/>
+        <StackPanel  Grid.Row="3" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Horizontal">
+            <Button Content="Добавить" Margin="0 0 5 0" Command="{Binding AddProductInNote}" Width="170" Height="35"   FontSize="18"  Cursor="Hand"/>
+            <Button Content="Убрать" Margin="5 0 0 0" Command="{Binding DeleteProductInNote}" Width="170" Height="35"   FontSize="18"  Cursor="Hand"/>
         </StackPanel>
         <!--#endregion Down panel-->
         

@@ -60,6 +60,17 @@ namespace CrackaSmile.ViewModels
                 SignalChanged();
             }
         }
+        public List<ProductPartOfWarehouseApi> mynew { get; set; }
+
+        public List<ProductPartOfWarehouseApi> Mynew
+        {
+            get => mynew;
+            set
+            {
+                mynew = value;
+                SignalChanged();
+            }
+        }
 
         public List<PartOfWarehouseApi> allParts { get; set; }
         public List<PartOfWarehouseApi> AllParts
@@ -131,7 +142,6 @@ namespace CrackaSmile.ViewModels
         public CustomCommand Add { get; set; }
         public CustomCommand TakeOff { get; set; }
 
-        bool secr;
         #endregion
 
         public EditProductViewModel(ProductApi product)
@@ -181,7 +191,6 @@ namespace CrackaSmile.ViewModels
 
             Add = new CustomCommand(() =>
             {
-                    
                 try
                 {
                     #region dump
@@ -331,17 +340,7 @@ namespace CrackaSmile.ViewModels
             SignalChanged("units");
         }
 
-        public List<ProductPartOfWarehouseApi> mynew { get; set; }
-
-        public List<ProductPartOfWarehouseApi> Mynew
-        {
-            get => mynew;
-            set
-            {
-                mynew = value;
-                SignalChanged();
-            }
-        }
+        
         public async Task PartCountMethod()
         {
             Thread.Sleep(200);
@@ -365,9 +364,6 @@ namespace CrackaSmile.ViewModels
                 }
 
             }
-
-            
-
         }
         public async Task TakeOffMethod()
         {

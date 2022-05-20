@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -24,8 +25,40 @@ namespace CrackaSmile.ViewModels
             }
         }
 
+        public ProductApi selectedProductInNote;
+
+        public ProductApi SelectedProductInNote
+        {
+            get => selectedProductInNote;
+            set
+            {
+                selectedProductInNote = value;
+                SignalChanged();
+            }
+        }
+
         public List<ProductApi> products { get; set; }
+        public List<SoftDeleteApi> softdeletes { get; set; }
         public List<ProductApi> productsInNote { get; set; }
+        public List<ProductApi> ProductsInNote
+        {
+            get => productsInNote;
+            set
+            {
+                productsInNote = value;
+                SignalChanged();
+            }
+        }
+        public List<ProductApi> productFree { get; set; }
+        public List<ProductApi> ProductFree
+        {
+            get => productFree;
+            set
+            {
+                productFree = value;
+                SignalChanged();
+            }
+        }
         public List<ProductApi> Products
         {
             get => products;
@@ -41,6 +74,7 @@ namespace CrackaSmile.ViewModels
 
         #region commands
         public CustomCommand AddProductInNote { get; set; }
+        public CustomCommand DeleteProductInNote { get; set; }
         public CustomCommand BackPage { get; set; }
         public CustomCommand ForwardPage { get; set; }
 
@@ -119,19 +153,7 @@ namespace CrackaSmile.ViewModels
         private string selectedViewCountRows;
         #endregion
 
-        #region ResetList
-        public void Reset()
-        {
-            //products = new List<ProductApi>();
-            productsInNote = new List<ProductApi>();
-            foreach (var product in products)
-            {
-                if (product.DeliveryNoteId == idNote)
-                    productsInNote.Add(product);
-            }
-            MessageBox.Show("Данные были обновлены");
-        }
-        #endregion
+        
 
         public EditProductInDeliveryVM(DeliveryNoteApi deliveryNote)
         {
@@ -141,7 +163,7 @@ namespace CrackaSmile.ViewModels
                 InitPagination();
                 Pagination();
             });
-            Task.Run(LoadEntities);
+
             ViewCountRows = new List<string>();
             ViewCountRows.AddRange(new string[] { "15", "все" });
             selectedViewCountRows = ViewCountRows.First();
@@ -179,11 +201,23 @@ namespace CrackaSmile.ViewModels
             {
                 if (SelectedProduct == null)
                     return;
-               // if(selectedProduct.DeliveryNoteId != null)
                 selectedProduct.DeliveryNoteId = deliveryNote.Id;
                 Task.Run(EditProduct);
-                //Task.Run(TakeListProducts);
-                Reset();
+                Thread.Sleep(100);
+                Task.Run(TakeListProducts);
+                
+            });
+
+            DeleteProductInNote = new CustomCommand(() =>
+            {
+                if (SelectedProductInNote != null)
+                {
+                    SelectedProductInNote.DeliveryNoteId = null;
+                    Task.Run(DeleteProductInNoteMethod);
+                    Thread.Sleep(100);
+                    Task.Run(TakeListProducts);
+                }
+                else { MessageBox.Show("Проверьте заполнение данных!");}
             });
 
         }
@@ -193,38 +227,67 @@ namespace CrackaSmile.ViewModels
         {
             var search = SearchText.ToLower();
             //Task.Run(TakeListProducts);
-            Task.Run(LoadEntities);
-            searchResult = mysearch.Where(c => c.Name.ToString().Contains(search) ||
-            c.Price.ToString().Contains(search) ||
+            //Task.Run(LoadEntities);
+            searchResult = mysearch.Where(c => c.Name.Contains(search) ||
             c.Code.ToLower().Contains(search)).ToList();
 
             InitPagination();
             Pagination();
-        }
-        public async Task LoadEntities()
-        {
-            var result = await Api.GetListAsync<ProductApi[]>("Product");
-            mysearch = new List<ProductApi>(result);
-            products = new List<ProductApi>(result);
         }
         public async Task EditProduct()
         {
             await Api.PutAsync<ProductApi>(SelectedProduct, "Product");
         }
 
+        public async Task DeleteProductInNoteMethod()
+        {
+            await Api.PutAsync<ProductApi>(SelectedProductInNote, "Product");
+        }
+
         public async Task TakeListProducts()
         {
             var result = await Api.GetListAsync<ProductApi[]>("Product");
-            products = new List<ProductApi>(result);
-            SignalChanged("products");
-            searchResult = new List<ProductApi>(result);
-            productsInNote = new List<ProductApi>();
-            foreach (var product in products)
+            Products = new List<ProductApi>(result);
+
+            var result1 = await Api.GetListAsync<SoftDeleteApi[]>("SoftDelete");
+            softdeletes = new List<SoftDeleteApi>(result1);
+
+            ProductsInNote = new List<ProductApi>();
+
+            foreach (var product in Products)
+            {
+                product.SoftDelete = softdeletes.First(s => s.Id == product.SoftDeleteId);
+            }
+
+            foreach (var product in Products)
             {
                 if (product.DeliveryNoteId == idNote)
-                    productsInNote.Add(product);
+                    ProductsInNote.Add(product);
             }
-            
+
+            ProductFree = new List<ProductApi>();
+            foreach (var item in products)
+            {
+                if (item.DeliveryNoteId.HasValue)
+                {
+                    continue;
+                }
+                else
+                {
+                    if (item.SoftDelete.Deleted == false)
+                    {
+                        ProductFree.Add(item);
+                    }
+                }
+            }
+
+            mysearch = new List<ProductApi>(ProductFree);
+            searchResult = new List<ProductApi>(ProductFree);
+        }
+
+        public async Task CountListMethod()
+        {
+            Thread.Sleep(200);
         }
 
 
@@ -232,7 +295,7 @@ namespace CrackaSmile.ViewModels
 
         private void InitPagination()
         {
-            SearchCountRows = $"Найдено записей: {searchResult.Count} из ";
+            SearchCountRows = $"Найдено записей: {searchResult.Count} из {ProductFree.Count}";
             paginationPageIndex = 0;
         }
 
@@ -241,11 +304,11 @@ namespace CrackaSmile.ViewModels
             int rowsOnPage = 0;
             if (!int.TryParse(SelectedViewCountRows, out rowsOnPage))
             {
-                Products = searchResult;
+                ProductFree = searchResult;
             }
             else
             {
-                Products = searchResult.Skip(rowsOnPage * paginationPageIndex)
+                ProductFree = searchResult.Skip(rowsOnPage * paginationPageIndex)
                     .Take(rowsOnPage).ToList();
             }
         }
