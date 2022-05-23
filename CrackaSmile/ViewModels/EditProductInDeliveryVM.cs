@@ -289,7 +289,11 @@ namespace CrackaSmile.ViewModels
 
         private void InitPagination()
         {
-            SearchCountRows = $"Найдено записей: {searchResult.Count} из {ProductFree.Count}";
+            if (searchResult != null)
+            {
+                SearchCountRows = $"Найдено записей: {searchResult.Count} из {ProductFree.Count}";
+            }
+            
             paginationPageIndex = 0;
         }
 

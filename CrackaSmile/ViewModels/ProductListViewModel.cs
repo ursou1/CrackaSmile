@@ -16,6 +16,15 @@ namespace CrackaSmile.ViewModels
 
         #region properties
         public List<DeliveryNoteApi> deliveryNotes { get; set; }
+        public List<DeliveryNoteApi> DeliveryNotes
+        {
+            get => deliveryNotes;
+            set
+            {
+                deliveryNotes = value;
+                SignalChanged();
+            }
+        }
 
         public ProductApi selectedProduct;
         public ProductApi SelectedProduct
@@ -128,8 +137,8 @@ namespace CrackaSmile.ViewModels
         {
             Task.Run(TakeListProducts).ContinueWith(s =>
             {
-                //InitPagination();
-                //Pagination();
+                InitPagination();
+                Pagination();
             });
 
             ViewCountRows = new List<string>();
@@ -144,7 +153,7 @@ namespace CrackaSmile.ViewModels
             SortTypes.AddRange(new string[] { "По умолчанию", "По алфавиту: А-Я", "По алфавиту: Я-А" });
             selectedSortType = SortTypes.First();
 
-            Task.Run(LoadEntities);//
+            //Task.Run(LoadEntities);//
 
             #region команды по работе с записями
 
@@ -255,27 +264,30 @@ namespace CrackaSmile.ViewModels
             Products = new List<ProductApi>(result);
             
             var result1 = await Api.GetListAsync<DeliveryNoteApi[]>("DeliveryNote");
-            deliveryNotes = new List<DeliveryNoteApi>(result1);
+            DeliveryNotes = new List<DeliveryNoteApi>(result1);
             
             foreach (var product in Products)
             {
-                product.DeliveryNote = deliveryNotes.First(s => s.Id == product.DeliveryNoteId);
+                if (product.DeliveryNoteId != null)
+                {
+                    product.DeliveryNote = DeliveryNotes.First(s => s.Id == product.DeliveryNoteId);
+                }
+                
             }
 
             searchResult = new List<ProductApi>(Products);
             mysearch = new List<ProductApi>(Products);
         }
-        
+
+        //public async Task LoadEntities()
+        //{
+        //    var result = await Api.GetListAsync<ProductApi[]>("Product");
+        //    Products = new List<ProductApi>(result);
+        //}
+
         public async Task DeleteProductMethod()
         {
             await Api.DeleteAsync<ProductApi>(selectedProduct, "Product");
-        }
-
-        public async Task LoadEntities()
-        {
-            var result = await Api.GetListAsync<ProductApi[]>("Product");
-            mysearch = new List<ProductApi>(result);
-            Products = new List<ProductApi>(result);
         }
 
         private void InitPagination()

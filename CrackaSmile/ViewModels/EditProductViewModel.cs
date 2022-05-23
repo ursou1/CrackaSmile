@@ -146,11 +146,12 @@ namespace CrackaSmile.ViewModels
 
         public EditProductViewModel(ProductApi product)
         {
+            string directory = Environment.CurrentDirectory;//for photo
             Task.Run(TakeListProducts).ContinueWith(s =>
             {
                 if (product == null)
                 {
-                    AddProduct = new ProductApi();
+                    AddProduct = new ProductApi { Image = @"\Images\no_photo.png", SoftDeleteId = 2};
                 }
                 else
                 {
@@ -165,12 +166,26 @@ namespace CrackaSmile.ViewModels
                         Description = product.Description,
                         UnitId = product.UnitId,
                         ProductTypeId = product.ProductTypeId,
+                        SoftDeleteId = product.SoftDeleteId,
+                        
                     };
 
                     SelectedProductType = productTypes.First(s => s.Id == product.ProductTypeId);
                     SelectedUnit = units.First(s => s.Id == product.UnitId);
                     idProduct = product.Id;
+
+                    //ImageProduct = GetImageFromPath(directory.Substring(0, directory.Length - 25) + "\\" + AddProduct.Image);
+                    string url = directory.Substring(0, directory.Length - 25) + "\\" + AddProduct.Image;
+                    BitmapImage img = new BitmapImage();
+                    img.BeginInit();
+                    img.CacheOption = BitmapCacheOption.OnLoad;
+                    img.UriSource = new Uri(url, UriKind.Absolute);
+                    img.EndInit();
+                    img.Freeze();
+                    ImageProduct = img;
+
                 }
+
             });
 
             Task.Run(PartCountMethod);
@@ -178,9 +193,21 @@ namespace CrackaSmile.ViewModels
             Save = new CustomCommand(() =>
             {
                 if (AddProduct.Id == 0)
+                {
                     Task.Run(CreateNewProduct);
+                }
                 else
+                {
+                    if (product.DeliveryNoteId != null)
+                    {
+                        AddProduct.DeliveryNoteId = product.DeliveryNoteId;
+                    }
+                    if (product.DepartNoteId != null)
+                    {
+                        AddProduct.DepartNoteId = product.DepartNoteId;
+                    }
                     Task.Run(EditProduct);
+                }
 
                 foreach (Window window in Application.Current.Windows)
                 {
@@ -261,10 +288,16 @@ namespace CrackaSmile.ViewModels
 
             });
 
-            string directory = Environment.CurrentDirectory;
-            if (AddProduct != null)
-                if (!string.IsNullOrEmpty(AddProduct.Image))
-                    ImageProduct = GetImageFromPath(directory.Substring(0, directory.Length - 10) + "\\" + AddProduct.Image);
+            
+            //if (AddProduct != null)
+            //{
+            //    ImageProduct = GetImageFromPath(directory.Substring(0, directory.Length - 25) + "\\" + AddProduct.Image);//for photo
+            //}
+            //else
+            //{
+            //    MessageBox.Show("Аддпродукт еще не обра");
+            //}
+                //if (!string.IsNullOrEmpty(AddProduct.Image))
             SelectImage = new CustomCommand(() =>
             {
                 OpenFileDialog ofd = new OpenFileDialog();
@@ -275,16 +308,26 @@ namespace CrackaSmile.ViewModels
                         var info = new FileInfo(ofd.FileName);
                         ImageProduct = GetImageFromPath(ofd.FileName);
                         AddProduct.Image = $"/Images/{info.Name}";
-                        var newPath = directory.Substring(0, directory.Length - 10) + AddProduct.Image;
+                        var newPath = directory.Substring(0, directory.Length - 25) + AddProduct.Image;
                         File.Copy(ofd.FileName, newPath);
                     }
                     catch (Exception e)
                     {
-                        MessageBox.Show(e.Message);
+                        MessageBox.Show("Картинка уже есть в директории");
                     }
                 }
+
+
             });
         }
+        //public async Task SubPath()
+        //{
+        //    string directory = Environment.CurrentDirectory;
+        //    if (AddProduct != null)
+        //    {
+        //        ImageProduct = GetImageFromPath(directory.Substring(0, directory.Length - 25) + "\\" + AddProduct.Image);
+        //    }
+        //}
 
         private BitmapImage GetImageFromPath(string url)
         {
@@ -322,6 +365,7 @@ namespace CrackaSmile.ViewModels
         {
             AddProduct.ProductTypeId = selectedProductType.Id;
             AddProduct.UnitId = selectedUnit.Id;
+            
             await Api.PutAsync<ProductApi>(AddProduct, "Product");
         }
 
@@ -338,6 +382,8 @@ namespace CrackaSmile.ViewModels
             var result2 = await Api.GetListAsync<UnitApi[]>("Unit");
             units = new List<UnitApi>(result2);
             SignalChanged("units");
+
+            
         }
 
         

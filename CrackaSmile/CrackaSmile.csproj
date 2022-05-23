@@ -7,9 +7,31 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Images\boxes.png" />
+    <None Remove="Images\boxes1.png" />
+    <None Remove="Images\boxes2.png" />
     <None Remove="Images\logo.jpg" />
+    <None Remove="Images\logo.png" />
     <None Remove="Images\logo1.jpg" />
     <None Remove="Images\no_photo.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Images\boxes.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\boxes1.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\boxes2.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Images\logo.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
 
   <ItemGroup>
@@ -26,9 +48,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="Images\logo.jpg">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Resource>
     <Resource Include="Images\logo1.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>

@@ -38,14 +38,34 @@ namespace CrackaSmile.ViewModels
         }
 
         public UnitApi selectedUnit;
-        
-
         public UnitApi SelectedUnit
         {
             get => selectedUnit;
             set
             {
                 selectedUnit = value;
+                SignalChanged();
+            }
+        }
+        public List<DepartNoteApi> departNotes { get; set; }
+        public List<DepartNoteApi> DepartNotes
+        {
+            get => departNotes;
+            set
+            {
+                departNotes = value;
+                SignalChanged();
+            }
+        }
+
+
+        public List<DeliveryNoteApi> deliveryNotes { get; set; }
+        public List<DeliveryNoteApi> DeliveryNotes
+        {
+            get => deliveryNotes;
+            set
+            {
+                deliveryNotes = value;
                 SignalChanged();
             }
         }
@@ -67,6 +87,28 @@ namespace CrackaSmile.ViewModels
             set
             {
                 qR = value;
+                SignalChanged();
+            }
+        }
+
+        public DepartNoteApi selectedDepartNote;
+        public DepartNoteApi SelectedDepartNote
+        {
+            get => selectedDepartNote;
+            set
+            {
+                selectedDepartNote = value;
+                SignalChanged();
+            }
+        }
+
+        public DeliveryNoteApi selectedDeliveryNote;
+        public DeliveryNoteApi SelectedDeliveryNote
+        {
+            get => selectedDeliveryNote;
+            set
+            {
+                selectedDeliveryNote = value;
                 SignalChanged();
             }
         }
@@ -100,9 +142,17 @@ namespace CrackaSmile.ViewModels
                 };
                 SelectedProductType = productTypes.First(s => s.Id == product.ProductTypeId);
                 SelectedUnit = units.First(s => s.Id == product.UnitId);
+                if (product.DeliveryNoteId != null)
+                {
+                    SelectedDeliveryNote = DeliveryNotes.First(s => s.Id == product.DeliveryNoteId);
+                }
+                if (product.DepartNoteId != null)
+                {
+                    SelectedDepartNote = DepartNotes.First(s => s.Id == product.DepartNoteId);
+                }
 
             });
-            QRCodeData qrCodeData = qrGenerator.CreateQrCode("Код" + product.Code + "Наименование"  + product.Name, QRCodeGenerator.ECCLevel.Q);
+            QRCodeData qrCodeData = qrGenerator.CreateQrCode("Код:" +  product.Code + "\n" + "Наименование:"  + product.Name, QRCodeGenerator.ECCLevel.Q);
             XamlQRCode qrCode = new XamlQRCode(qrCodeData);
             QR = qrCode.GetGraphic(20);
         }
@@ -120,6 +170,17 @@ namespace CrackaSmile.ViewModels
             var result2 = await Api.GetListAsync<UnitApi[]>("Unit");
             units = new List<UnitApi>(result2);
             SignalChanged("units");
+
+            var result3 = await Api.GetListAsync<DeliveryNoteApi[]>("DeliveryNote");
+            DeliveryNotes = new List<DeliveryNoteApi>(result3);
+
+            var result4 = await Api.GetListAsync<DepartNoteApi[]>("DepartNote");
+            DepartNotes = new List<DepartNoteApi>(result4);
+            
+            foreach (var product in products)
+            {
+                
+            }
         }
     }
 }
