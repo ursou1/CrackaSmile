@@ -213,7 +213,10 @@ namespace CrackaSmile.ViewModels
                 editClient.ShowDialog();
                 AddClientNotification();
                 Thread.Sleep(200);
-                Task.Run(TakeListClients);
+                Task.Run(TakeListClients).ContinueWith(s=>
+                {
+                    InitPagination();
+                });
             });
             
             EditClient = new CustomCommand(() =>
@@ -223,7 +226,10 @@ namespace CrackaSmile.ViewModels
                 editClient.ShowDialog();
                 EditClientNotification();
                 Thread.Sleep(200);
-                Task.Run(TakeListClients);
+                Task.Run(TakeListClients).ContinueWith(s =>
+                {
+                    InitPagination();
+                });
             });
 
             DeleteClient = new CustomCommand(() =>
@@ -303,8 +309,6 @@ namespace CrackaSmile.ViewModels
             var search = SearchText.ToLower();
             Task.Run(LoadEntities);
             searchResult = mysearch.Where(c => c.Name.ToLower().Contains(search) ||
-            c.LastName.ToLower().Contains(search) ||
-            c.FatherName.ToLower().Contains(search) ||
             c.Address.ToLower().Contains(search) ||
             c.Telephone.ToLower().Contains(search) ||
             c.Email.ToLower().Contains(search)).ToList();
@@ -329,14 +333,23 @@ namespace CrackaSmile.ViewModels
             {
                 AutoTB.Add(item.Name);
                 AutoTB.Add(item.Name.ToLower());
+                if(item.LastName != null)
+                {
                 AutoTB.Add(item.LastName);
                 AutoTB.Add(item.LastName.ToLower());
-                AutoTB.Add(item.FatherName);
-                AutoTB.Add(item.FatherName.ToLower());
+                }
+                if (item.FatherName != null)
+                {
+                    AutoTB.Add(item.FatherName);
+                    AutoTB.Add(item.FatherName.ToLower());
+                }
                 AutoTB.Add(item.Email);
                 AutoTB.Add(item.Email.ToLower());
-                AutoTB.Add(item.Address);
-                AutoTB.Add(item.Address.ToLower());
+                if (item.Address != null)
+                {
+                    AutoTB.Add(item.Address);
+                    AutoTB.Add(item.Address.ToLower());
+                }
             }
             SignalChanged("AutoTB");
             #endregion

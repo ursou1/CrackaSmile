@@ -25,16 +25,44 @@
             Grid.Row="0"
         Series="{Binding Series}">
         </lvc:CartesianChart>-->
-        <lvc:PieChart
+        
+        <!--<lvc:PieChart
             Grid.Row="1"
             x:Name="pieChart"
+            Series="{Binding Series, UpdateSourceTrigger=PropertyChanged}">
+        </lvc:PieChart>
+
+        <lvc:PieChart
+            Grid.Row="1"
+            x:Name="pieChart1"
+            Series="{Binding Series1, UpdateSourceTrigger=PropertyChanged}">
+        </lvc:PieChart>-->
+        <lvc:PieChart
+            LegendPosition="Right"
+            Grid.Row="1"
             Series="{Binding Series}">
         </lvc:PieChart>
+
+        
+
         <StackPanel Grid.Row="2">
-        <Button Content="qwe" Command="{Binding count}" Width="100" Height="50"/>
+        <!--<Button Content="qwe" Command="{Binding count}" Width="100" Height="50"/>-->
+            
+
+
             
         </StackPanel>
+
+        <Grid Grid.Row="2">
+            <!--<lvc:PieChart
+             Height="100"
+            Grid.Row="0"
+            Series="{Binding Series1}">
+        </lvc:PieChart>-->
+        </Grid>
     </Grid>
+    
+    
 
 
 </Page>

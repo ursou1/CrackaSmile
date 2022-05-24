@@ -38,6 +38,7 @@ namespace CrackaSmile.ViewModels
 
         #region commands
         public CustomCommand Save { get; set; }
+        public CustomCommand Cancel { get; set; }
         #endregion
 
 
@@ -63,11 +64,36 @@ namespace CrackaSmile.ViewModels
                 };
             }
 
+            Cancel = new CustomCommand(() =>
+            {
+                foreach (Window window in Application.Current.Windows)
+                {
+                    if (window.DataContext == this) CloseWin(window);
+                }
+            });
+
+
             Save = new CustomCommand(() =>
             {
                 if (AddClient.Id == 0)
                 {
-                    Task.Run(CreateNewClient);
+                    try
+                    {
+                         if (AddClient.Name != null && AddClient.Telephone != null && AddClient.Address != null)
+                            {
+                                Task.Run(CreateNewClient);
+                            }
+                         else
+                        {
+                            MessageBox.Show("Проверьте заполнение данных!");
+                            return;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("Проверьте заполнение данных!");
+                    }
+                    
                     
                 }
                 else
@@ -87,6 +113,10 @@ namespace CrackaSmile.ViewModels
 
         public async Task CreateNewClient()
         {
+            if(AddClient.Email == null)
+            {
+                AddClient.Email = "Отсутствует";
+            }
             await Api.PostAsync<ClientApi>(AddClient, "Client");
         }
 

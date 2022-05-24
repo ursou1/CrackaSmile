@@ -80,7 +80,6 @@ namespace CrackaSmile.ViewModels
             });
 
 
-
         }
     }
 }
