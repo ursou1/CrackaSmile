@@ -1,9 +1,12 @@
 ﻿using CrackaSmile.Tools;
 using CrackaSmile.Views;
 using ModelsApi;
+using Spire.Xls;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -141,6 +144,7 @@ namespace CrackaSmile.ViewModels
         public CustomCommand EditProduct { get; set; }
         public CustomCommand InfoProduct { get; set; }
         public CustomCommand DeleteProduct { get; set; }
+        public CustomCommand ExportExcel { get; set; }
 
         public CustomCommand BackPage { get; set; }
         public CustomCommand ForwardPage { get; set; }
@@ -178,6 +182,11 @@ namespace CrackaSmile.ViewModels
                 editProduct.ShowDialog();
                 Thread.Sleep(200);
                 Task.Run(TakeListProducts);
+            });
+
+            ExportExcel = new CustomCommand(() =>
+            {
+                Print();
             });
 
             InfoProduct = new CustomCommand(() =>
@@ -345,5 +354,82 @@ namespace CrackaSmile.ViewModels
                     .Take(rowsOnPage).ToList();
             }
         }
+
+
+        #region Вывод в эксель
+        public void Print()
+        {
+            var workbook = new Workbook();
+            var sheet = workbook.Worksheets[0];
+            sheet.Range["F1"].Value = DateTime.Now.ToShortDateString();
+            sheet.Range["F1"].Style.Borders.Color = Color.FromArgb(0, 0, 128);
+            //sheet.Range["F1"].Style.Borders.LineStyle = LineStyleType.Thin;
+            sheet.Range["F1"].Style.Color = Color.ForestGreen;
+
+            sheet.Range["A3"].Value = $"№  ";
+
+            sheet.Range["B3"].Value = $"Код   ";
+
+            sheet.Range["C3"].Value = $"Наименование   ";
+
+            sheet.Range["D3"].Value = $"Количество   ";
+
+            sheet.Range["E3"].Value = $"Цена   ";
+
+            int index = 4;
+            int count = 1;
+
+            foreach (var product in products)
+            {
+                sheet.Range[$"A{index}"].NumberValue = count++;
+
+                sheet.Range[$"B{index}"].Value = product.Code;
+
+                sheet.Range[$"C{index}"].Value = product.Name;
+
+                sheet.Range[$"D{index}"].NumberValue = product.Count;
+
+                sheet.Range[$"E{index}"].Value = product.Price.ToString();
+
+                index++;
+            }
+
+            int bolding = products.Count + 3;
+            sheet.Range["A3:E3"].Style.Font.IsBold = true;
+
+            sheet.Range[$"A3:E{bolding}"].Style.Borders[BordersLineType.EdgeTop].Color = Color.FromArgb(0, 0, 128);
+            sheet.Range[$"A3:E{bolding}"].Style.Borders[BordersLineType.EdgeTop].LineStyle = LineStyleType.Thin;
+
+            sheet.Range[$"A3:E{bolding}"].Style.Borders[BordersLineType.EdgeBottom].Color = Color.FromArgb(0, 0, 128);
+            sheet.Range[$"A3:E{bolding}"].Style.Borders[BordersLineType.EdgeBottom].LineStyle = LineStyleType.Thin;
+
+            sheet.Range[$"A3:E{bolding}"].Style.Borders[BordersLineType.EdgeLeft].Color = Color.FromArgb(0, 0, 128);
+            sheet.Range[$"A3:E{bolding}"].Style.Borders[BordersLineType.EdgeLeft].LineStyle = LineStyleType.Thin;
+
+            sheet.Range[$"A3:E{bolding}"].Style.Borders[BordersLineType.EdgeRight].Color = Color.FromArgb(0, 0, 128);
+            sheet.Range[$"A3:E{bolding}"].Style.Borders[BordersLineType.EdgeRight].LineStyle = LineStyleType.Thin;
+
+            //sheet.Range["A3:I100"].Style.Borders[BordersLineType.EdgeTop].Color = Color.FromArgb(0, 0, 128);
+            //sheet.Range["A3:I100"].Style.Borders[BordersLineType.EdgeTop].LineStyle = LineStyleType.Thin;
+            //sheet.Range["A3:I100"].Style.Borders[BordersLineType.EdgeBottom].Color = Color.FromArgb(0, 0, 128);
+            //sheet.Range["A3:I100"].Style.Borders[BordersLineType.EdgeBottom].LineStyle = LineStyleType.Thin;
+            //sheet.Range["A3:I100"].Style.Borders[BordersLineType.EdgeLeft].Color = Color.FromArgb(0, 0, 128);
+            //sheet.Range["A3:I100"].Style.Borders[BordersLineType.EdgeLeft].LineStyle = LineStyleType.Thin;
+            //sheet.Range["A3:I100"].Style.Borders[BordersLineType.EdgeRight].Color = Color.FromArgb(0, 0, 128);
+            //sheet.Range["A3:I100"].Style.Borders[BordersLineType.EdgeRight].LineStyle = LineStyleType.Thin;
+
+            sheet.AllocatedRange.AutoFitColumns();
+
+            workbook.SaveToFile("text1.xls");
+            Process p = new Process();
+            p.StartInfo = new ProcessStartInfo(Environment.CurrentDirectory + "/text1.xls")
+            {
+                UseShellExecute = true
+            };
+            p.Start();
+        }
+        #endregion
+
+
     }
 }

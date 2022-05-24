@@ -79,11 +79,11 @@ namespace CrackaSmile.ViewModels
                 {
                     try
                     {
-                         if (AddClient.Name != null && AddClient.Telephone != null && AddClient.Address != null)
-                            {
-                                Task.Run(CreateNewClient);
-                            }
-                         else
+                        if (AddClient.Name != null && AddClient.Telephone != null && AddClient.Address != null)
+                        {
+                            Task.Run(CreateNewClient);
+                        }
+                        else
                         {
                             MessageBox.Show("Проверьте заполнение данных!");
                             return;
@@ -93,13 +93,10 @@ namespace CrackaSmile.ViewModels
                     {
                         MessageBox.Show("Проверьте заполнение данных!");
                     }
-                    
-                    
                 }
                 else
                 {
                     Task.Run(EditClient);
-                    
                 }
                     
 

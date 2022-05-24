@@ -28,6 +28,7 @@ namespace CrackaSmile.ViewModels
 
         #region commands
         public CustomCommand Save { get; set; }
+        public CustomCommand Cancel { get; set; }
         #endregion
 
         public EditProviderViewModel(ProviderApi provider)
@@ -48,12 +49,40 @@ namespace CrackaSmile.ViewModels
                 };
             }
 
+            Cancel = new CustomCommand(() =>
+            {
+                foreach (Window window in Application.Current.Windows)
+                {
+                    if (window.DataContext == this) CloseWin(window);
+                }
+            });
+
             Save = new CustomCommand(() =>
             {
                 if (AddProvider.Id == 0)
-                    Task.Run(CreateNewProvider);
+                {
+                    try
+                    {
+                        if (AddProvider.Name != null && AddProvider.Telephone != null)
+                        {
+                            Task.Run(CreateNewProvider);
+
+                        }
+                        else
+                        {
+                            MessageBox.Show("Проверьте заполнение данных!");
+                            return;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("Проверьте заполнение данных!");
+                    }
+                }    
                 else
+                {
                     Task.Run(EditProvider);
+                }
 
 
                 foreach (Window window in Application.Current.Windows)
@@ -66,6 +95,10 @@ namespace CrackaSmile.ViewModels
 
         public async Task CreateNewProvider()
         {
+            if (AddProvider.Email != null)
+            {
+                AddProvider.Email = "Отсутствует";
+            }
             await Api.PostAsync<ProviderApi>(AddProvider, "Provider");
         }
 

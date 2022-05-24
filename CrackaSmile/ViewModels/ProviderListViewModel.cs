@@ -214,7 +214,10 @@ namespace CrackaSmile.ViewModels
                 editProvider.ShowDialog();
                 AddProviderNotification();
                 Thread.Sleep(200);
-                Task.Run(TakeListProviders);
+                Task.Run(TakeListProviders).ContinueWith(s =>
+                {
+                    InitPagination();
+                });
             });
 
             EditProvider = new CustomCommand(() =>
@@ -224,7 +227,10 @@ namespace CrackaSmile.ViewModels
                 editProvider.ShowDialog();
                 EditProviderNotification();
                 Thread.Sleep(200);
-                Task.Run(TakeListProviders);
+                Task.Run(TakeListProviders).ContinueWith(s =>
+                {
+                    InitPagination();
+                });
             });
 
             DeleteProvider = new CustomCommand(() =>

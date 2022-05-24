@@ -29,21 +29,13 @@
                     <TextBox Width="200" Grid.Row="1" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
                              behaviors:AutoCompleteBehavior.AutoCompleteItemsSource="{Binding AutoTB}"/>
                 </StackPanel>
-                <StackPanel Margin="4">
-                    <Label Grid.Column="1" Content="Критерий поиска:"/>
-                    <ComboBox Width="200" Grid.Row="1" Grid.Column="1" ItemsSource="{Binding SearchType}" SelectedItem="{Binding SelectedSearchType}"/>
-                </StackPanel>
-            </StackPanel>
-            <StackPanel Grid.Column="1" HorizontalAlignment="Left" Margin="4">
-                <Label Content="Фильтрация по типу"/>
-                <ComboBox Width="200" DisplayMemberPath="Title" ItemsSource="{Binding MaterialTypeFilter}" SelectedItem="{Binding SelectedMaterialTypeFilter}"/>
-            </StackPanel>
-            <StackPanel Grid.Column="2" Orientation="Horizontal" Margin="4">
-                <StackPanel  HorizontalAlignment="Left">
+                <StackPanel Margin="20,0,0,0" HorizontalAlignment="Left">
                     <Label Content="Сортировка по типу"/>
                     <ComboBox Width="200" ItemsSource="{Binding SortTypes}" SelectedItem="{Binding SelectedSortType}"/>
                 </StackPanel>
             </StackPanel>
+            
+            
 
         </Grid>
 
@@ -111,7 +103,8 @@
             <StackPanel Orientation="Horizontal" Grid.Column="2" HorizontalAlignment="Right">
                 <Label Content="Кол-во записей на странице:" Margin="4"/>
                 <ComboBox Width="200" ItemsSource="{Binding ViewCountRows}" SelectedItem="{Binding SelectedViewCountRows}" Margin="4"/>
-                <Button Content="Добавить продукт" Command="{Binding AddProduct}" Margin="4"/>
+                <Button Content="Добавить" Command="{Binding AddProduct}" Margin="4" Cursor="Hand" Padding="3"/>
+                <Button Content="Экспорт в эксель" Command="{Binding ExportExcel}" Margin="4" Cursor="Hand" Padding="3"/>
             </StackPanel>
         </StackPanel>
     </Grid>

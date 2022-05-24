@@ -28,20 +28,17 @@
             
                 <StackPanel Orientation="Horizontal">
                     <StackPanel Margin="4">
-                            <Label Content="Поиск:"/>
-                            <TextBox Width="200" Grid.Row="1" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
-                                     behaviors:AutoCompleteBehavior.AutoCompleteItemsSource="{Binding AutoTB}"/>
-                        </StackPanel>
-                    <!--<StackPanel Margin="4">
-                            <Label Grid.Column="1" Content="Критерий поиска:"/>
-                            <ComboBox Width="200" Grid.Row="1" Grid.Column="1" ItemsSource="{Binding SearchType}" SelectedItem="{Binding SelectedSearchType}"/>
-                        </StackPanel>-->
-                <StackPanel  HorizontalAlignment="Left" Margin="20, 0 , 0 , 0">
+                        <Label Content="Поиск:"/>
+                        <TextBox Width="200" Grid.Row="1" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
+                                    behaviors:AutoCompleteBehavior.AutoCompleteItemsSource="{Binding AutoTB}"/>
+                    </StackPanel>
+
+                <StackPanel  HorizontalAlignment="Left" Margin="20,0,0,0">
                     <Label Content="Сортировка по типу"/>
                     <ComboBox Width="200" ItemsSource="{Binding SortTypes}" SelectedItem="{Binding SelectedSortType}"/>
                 </StackPanel>
 
-                
+
             </StackPanel>
             
             <!--<StackPanel Grid.Column="1" HorizontalAlignment="Left" Margin="4">
@@ -138,7 +135,8 @@
             <StackPanel Orientation="Horizontal" Grid.Column="2" HorizontalAlignment="Right">
                 <Label Content="Кол-во записей на странице:" Margin="4"/>
                 <ComboBox Width="200" ItemsSource="{Binding ViewCountRows}" SelectedItem="{Binding SelectedViewCountRows}" Margin="4"/>
-                <Button Content="Добавить" Command="{Binding AddClient}" Margin="4" Cursor="Hand" Padding="5"/>
+                <Button Content="Добавить" Command="{Binding AddClient}" Margin="4" Cursor="Hand" Padding="3"/>
+               
             </StackPanel>
         </StackPanel>
     </Grid>
