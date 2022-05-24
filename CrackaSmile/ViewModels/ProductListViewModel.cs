@@ -295,6 +295,7 @@ namespace CrackaSmile.ViewModels
             SearchCountRows = $"Найдено записей: {searchResult.Count} из ";
             paginationPageIndex = 0;
         }
+        
 
         private void Pagination()
         {
