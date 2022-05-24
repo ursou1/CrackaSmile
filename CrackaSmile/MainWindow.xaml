@@ -44,7 +44,7 @@
 
                 <Button  Content="Товар" Height="60" FontSize="20" Command="{Binding ProductPage}" Cursor="Hand" Margin="0,2,0,2" />-->
 
-                <RadioButton Content="Перемещение" Height="60" FontSize="20" Command="{Binding TestPage1}"  Style="{StaticResource Button}" IsChecked="False"/>
+                <RadioButton Content="Статистика" Height="60" FontSize="20" Command="{Binding Page1Page}"  Style="{StaticResource Button}" IsChecked="False"/>
                 <RadioButton Content="Накладная приход" Height="60" FontSize="20" Command="{Binding DeliveryNotePage}"  Style="{StaticResource Button}" IsChecked="False"/>
                 <RadioButton Content="Накладная уход" Height="60" FontSize="20" Command="{Binding DepartNotePage}"  Style="{StaticResource Button}" IsChecked="False"/>
                 <RadioButton Content="Поставщики" Height="60" FontSize="20" Command="{Binding ProviderPage}"  Style="{StaticResource Button}" IsChecked="False"/>

@@ -3,6 +3,7 @@ using CrackaSmile.Views;
 using ModelsApi;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -15,6 +16,8 @@ namespace CrackaSmile.ViewModels
     {
 
         #region properties
+
+        public ObservableCollection<string> AutoTB { get; set; }
         public List<DeliveryNoteApi> deliveryNotes { get; set; }
         public List<DeliveryNoteApi> DeliveryNotes
         {
@@ -22,6 +25,17 @@ namespace CrackaSmile.ViewModels
             set
             {
                 deliveryNotes = value;
+                SignalChanged();
+            }
+        }
+
+        public List<ProductApi> countForSearch { get; set; }
+        public List<ProductApi> CountForSearch
+        {
+            get => countForSearch;
+            set
+            {
+                countForSearch = value;
                 SignalChanged();
             }
         }
@@ -275,8 +289,23 @@ namespace CrackaSmile.ViewModels
                 
             }
 
+            #region AutoTB
+            AutoTB = new ObservableCollection<string>();
+            foreach (var item in Products)
+            {
+                AutoTB.Add(item.Name);
+                AutoTB.Add(item.Name.ToLower());
+                AutoTB.Add(item.Code);
+                AutoTB.Add(item.Code.ToLower());
+            }
+            SignalChanged("AutoTB");
+            #endregion
+
+
             searchResult = new List<ProductApi>(Products);
             mysearch = new List<ProductApi>(Products);
+
+            CountForSearch = new List<ProductApi>(result);//для вывода кол-ва записей снизу
         }
 
         //public async Task LoadEntities()
@@ -292,7 +321,13 @@ namespace CrackaSmile.ViewModels
 
         private void InitPagination()
         {
-            SearchCountRows = $"Найдено записей: {searchResult.Count} из ";
+            if (CountForSearch != null)
+            {
+                SearchCountRows = $"Найдено записей: {searchResult.Count} из {CountForSearch.Count()}";
+            }
+            else
+                SearchCountRows = $"Ни одной записи не найдено";
+
             paginationPageIndex = 0;
         }
         

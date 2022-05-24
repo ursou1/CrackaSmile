@@ -4,6 +4,7 @@ using Enterwell.Clients.Wpf.Notifications;
 using ModelsApi;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -17,7 +18,19 @@ namespace CrackaSmile.ViewModels
 
         #region properties
 
+        public ObservableCollection<string> AutoTB { get; set; }
         public List<ProviderApi> providers { get; set; }
+
+        public List<DeliveryNoteApi> countForSearch { get; set; }
+        public List<DeliveryNoteApi> CountForSearch
+        {
+            get => countForSearch;
+            set
+            {
+                countForSearch = value;
+                SignalChanged();
+            }
+        }
 
         public DeliveryNoteApi selectedDeliveryNote;
         public DeliveryNoteApi SelectedDeliveryNote
@@ -315,6 +328,18 @@ namespace CrackaSmile.ViewModels
            
             searchResult = new List<DeliveryNoteApi>(DeliveryNotes);
             mysearch = new List<DeliveryNoteApi>(DeliveryNotes);
+
+            #region AutoTB
+            AutoTB = new ObservableCollection<string>();
+            foreach (var item in DeliveryNotes)
+            {
+                AutoTB.Add(item.Number.ToString());
+                AutoTB.Add(item.DeliveryDate.ToShortDateString().ToString());
+            }
+            SignalChanged("AutoTB");
+            #endregion
+
+            CountForSearch = new List<DeliveryNoteApi>(result);//для вывода кол-ва записей снизу
         }
 
 
@@ -339,7 +364,13 @@ namespace CrackaSmile.ViewModels
 
         private void InitPagination()
         {
-            SearchCountRows = $"Найдено записей: {searchResult.Count} из ";
+            if (CountForSearch != null)
+            {
+                SearchCountRows = $"Найдено записей: {searchResult.Count} из {CountForSearch.Count()}";
+            }
+            else
+                SearchCountRows = $"Ни одной записи не найдено";
+
             paginationPageIndex = 0;
         }
 

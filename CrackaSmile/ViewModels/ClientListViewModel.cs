@@ -323,16 +323,24 @@ namespace CrackaSmile.ViewModels
 
             CountForSearch = new List<ClientApi>(result);//для вывода кол-ва записей снизу
 
+            #region AutoTB
             AutoTB = new ObservableCollection<string>();
             foreach (var item in Clients)
             {
                 AutoTB.Add(item.Name);
+                AutoTB.Add(item.Name.ToLower());
                 AutoTB.Add(item.LastName);
+                AutoTB.Add(item.LastName.ToLower());
                 AutoTB.Add(item.FatherName);
+                AutoTB.Add(item.FatherName.ToLower());
                 AutoTB.Add(item.Email);
+                AutoTB.Add(item.Email.ToLower());
                 AutoTB.Add(item.Address);
+                AutoTB.Add(item.Address.ToLower());
             }
             SignalChanged("AutoTB");
+            #endregion
+
         }
 
 

@@ -26,7 +26,8 @@
             <StackPanel Orientation="Horizontal">
                 <StackPanel Margin="4">
                     <Label Content="Поиск:"/>
-                    <TextBox Width="200" Grid.Row="1" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBox Width="200" Grid.Row="1" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
+                             behaviors:AutoCompleteBehavior.AutoCompleteItemsSource="{Binding AutoTB}"/>
                 </StackPanel>
                 <StackPanel Margin="4">
                     <Label Grid.Column="1" Content="Критерий поиска:"/>
