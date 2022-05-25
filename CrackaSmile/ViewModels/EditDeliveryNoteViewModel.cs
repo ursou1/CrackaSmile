@@ -40,6 +40,7 @@ namespace CrackaSmile.ViewModels
 
         #region commands
         public CustomCommand Save { get; set; }
+        public CustomCommand Cancel { get; set; }
         #endregion
 
         public EditDeliveryNoteViewModel(DeliveryNoteApi deliveryNote)
@@ -67,12 +68,41 @@ namespace CrackaSmile.ViewModels
 
             });
 
+            Cancel = new CustomCommand(() =>
+            {
+                foreach (Window window in Application.Current.Windows)
+                {
+                    if (window.DataContext == this) CloseWin(window);
+                }
+            });
+
             Save = new CustomCommand(() =>
             {
                 if (AddDeliveryNote.Id == 0)
-                    Task.Run(CreateNewDeliveryNote);
+                {
+                    try
+                    {
+                        if(AddDeliveryNote.Number.ToString() != null && AddDeliveryNote.DeliveryDate.ToString() != null && SelectedProvider != null)
+                        {
+                           Task.Run(CreateNewDeliveryNote);
+                        }
+                        else
+                        {
+                            MessageBox.Show("Проверьте заполнение данных!");
+                            return;
+                        }
+                    }
+                    catch (Exception)
+                    {
+                        MessageBox.Show("Проверьте заполнение данных!");
+                        
+                    }
+                    
+                }
                 else
+                {
                     Task.Run(EditDeliveryNote);
+                }
 
 
                 foreach (Window window in Application.Current.Windows)

@@ -110,7 +110,7 @@
                         <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Center">
                             <Label Content="Местоположение товара:" HorizontalAlignment="Center" FontSize="22"  FontWeight="Bold"/>
                         </StackPanel>
-                        <ListBox Grid.Column="0" Grid.Row="1" ItemsSource="{Binding mynew}" SelectedItem="{Binding SelectedMyNew}" HorizontalContentAlignment="Stretch" SelectionMode="Extended">
+                        <ListBox Grid.Column="0" Grid.Row="1" ItemsSource="{Binding Mynew}" SelectedItem="{Binding SelectedMyNew}" HorizontalContentAlignment="Stretch" SelectionMode="Extended">
                             <ListBox.ItemTemplate>
                                 <DataTemplate >
                                     <Grid>
@@ -143,7 +143,7 @@
                         <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center">
                             <Label Content="Список мест:" HorizontalAlignment="Center" FontSize="22"  FontWeight="Bold"/>
                         </StackPanel>
-                        <ListBox Grid.Column="1" Grid.Row="1" ItemsSource="{Binding allParts}" SelectedItem="{Binding SelectedAllPart}" HorizontalContentAlignment="Stretch" SelectionMode="Extended">
+                        <ListBox Grid.Column="1" Grid.Row="1" ItemsSource="{Binding AllParts}" SelectedItem="{Binding SelectedAllPart}" HorizontalContentAlignment="Stretch" SelectionMode="Extended">
                             <ListBox.ItemTemplate>
                                 <DataTemplate >
                                     <Grid>

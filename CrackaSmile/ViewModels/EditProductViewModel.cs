@@ -130,10 +130,20 @@ namespace CrackaSmile.ViewModels
         public List<ProductPartOfWarehouseApi> list { get; set; } = new List<ProductPartOfWarehouseApi>();//для идентичной записи
         public List<ProductPartOfWarehouseApi> partSelectedCount { get; set; }
         public List<ProductPartOfWarehouseApi> partAllCount { get; set; }
+        public List<ProductPartOfWarehouseApi> PartAllCount
+        {
+            get => partAllCount;
+            set
+            {
+                partAllCount = value;
+                SignalChanged();
+            }
+        }
         public List<ProductApi> products { get; set; }
         public List<ProductTypeApi> productTypes { get; set; }
         public List<UnitApi> units { get; set; }
         int idProduct;
+        int productCountNull;
         #endregion
 
         #region commands
@@ -173,7 +183,7 @@ namespace CrackaSmile.ViewModels
                     SelectedProductType = productTypes.First(s => s.Id == product.ProductTypeId);
                     SelectedUnit = units.First(s => s.Id == product.UnitId);
                     idProduct = product.Id;
-
+                    productCountNull = product.Count;
                     //ImageProduct = GetImageFromPath(directory.Substring(0, directory.Length - 25) + "\\" + AddProduct.Image);
                     string url = directory.Substring(0, directory.Length - 25) + "\\" + AddProduct.Image;
                     BitmapImage img = new BitmapImage();
@@ -184,11 +194,16 @@ namespace CrackaSmile.ViewModels
                     img.Freeze();
                     ImageProduct = img;
 
+                    
+
                 }
 
             });
 
-            Task.Run(PartCountMethod);
+            Task.Run(PartCountMethod).ContinueWith(s=>
+            {
+                NotNullCountMethod();
+            });
 
             Save = new CustomCommand(() =>
             {
@@ -254,18 +269,33 @@ namespace CrackaSmile.ViewModels
                     //    Task.Run(AddProductInPartMethod);
                     //}
                     #endregion
-
-                    if (mynew.Where(s => s.PartOfWarehouseId == SelectedAllPart.Id).Any())
+                    if (SelectedCountOfProduct != 0 && SelectedAllPart != null)
                     {
-                        Task.Run(EditValueMethod);
+                        if(SelectedCountOfProduct <= itog )
+                        {
+                            if (Mynew.Where(s => s.PartOfWarehouseId == SelectedAllPart.Id).Any())
+                            {
+                                Task.Run(EditValueMethod);
+                            }
+                            else
+                            {
+                                Task.Run(AddProductInPartMethod);
+                            }
+                            Thread.Sleep(100);
+                            Task.Run(PartCountMethod);
+                        }
+                        else
+                        {
+                            MessageBox.Show("Выбранное значение превышает кол-во товара!");
+                        }
+
+                        
                     }
                     else
                     {
-                        Task.Run(AddProductInPartMethod);
+                        MessageBox.Show("Убедитесть в заполнении данных");
                     }
-
-                    Thread.Sleep(100);
-                    Task.Run(PartCountMethod);
+                    
                 }
                 catch (Exception ex)
                 {
@@ -392,24 +422,27 @@ namespace CrackaSmile.ViewModels
             Thread.Sleep(200);
             Mynew = new List<ProductPartOfWarehouseApi>();
             var result = await Api.GetListAsync<ProductPartOfWarehouseApi[]>("ProductPartOfWarehouse");
-            partAllCount = new List<ProductPartOfWarehouseApi>(result);
+            PartAllCount = new List<ProductPartOfWarehouseApi>(result);
             SignalChanged("partAllCount");
 
             var result1 = await Api.GetListAsync<PartOfWarehouseApi[]>("PartOfWarehouse");
-            allParts = new List<PartOfWarehouseApi>(result1);
+            AllParts = new List<PartOfWarehouseApi>(result1);
             SignalChanged("allParts");
             
             partSelectedCount = new List<ProductPartOfWarehouseApi>();
 
-            foreach (var part in partAllCount)
+            foreach (var part in PartAllCount)
             {
                 if(idProduct == part.ProductId)
                 {
-                    part.PartOfWareHouse = allParts.First(s => s.Id == part.PartOfWarehouseId);
+                    part.PartOfWareHouse = AllParts.First(s => s.Id == part.PartOfWarehouseId);
                     Mynew.Add(part);
                 }
 
             }
+
+            NotNullCountMethod();
+            SignalChanged("Mynew");
         }
         public async Task TakeOffMethod()
         {
@@ -432,5 +465,20 @@ namespace CrackaSmile.ViewModels
             Window win = obj as Window;
             win.Close();
         }
+        public int notNull = 0;
+        public int itog = 0;
+        public void NotNullCountMethod()
+        {
+            notNull = 0;
+            foreach (var item in partAllCount)
+            {
+                if(item.ProductId == idProduct)
+                {
+                    notNull += item.ProductCount;
+                }
+            }
+            itog = productCountNull - notNull; 
+        }
+
     }
 }

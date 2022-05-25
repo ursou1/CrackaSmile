@@ -39,6 +39,7 @@ namespace CrackaSmile.ViewModels
 
         #region commands
         public CustomCommand Save { get; set; }
+        public CustomCommand Cancel { get; set; }
         #endregion
 
         public EditDepartNoteViewModel(DepartNoteApi departNote)
@@ -64,13 +65,40 @@ namespace CrackaSmile.ViewModels
                 }
             });
 
-                
+            Cancel = new CustomCommand(() =>
+            {
+                foreach (Window window in Application.Current.Windows)
+                {
+                    if (window.DataContext == this) CloseWin(window);
+                }
+            });
+
             Save = new CustomCommand(() =>
             {
                 if (AddDepartNote.Id == 0)
-                    Task.Run(CreateNewDepartNote);
+                {
+                    try
+                    {
+                        if (AddDepartNote.Number.ToString() != null && AddDepartNote.DepartDate.ToString() != null && SelectedClient != null)
+                        {
+                           Task.Run(CreateNewDepartNote);
+                        }
+                        else
+                        {
+                            MessageBox.Show("Проверьте заполнение данных!");
+                            return;
+                        }
+                    }
+                    catch (Exception)
+                    {
+                        MessageBox.Show("Проверьте заполнение данных!");
+                    }
+                    
+                }
                 else
+                {
                     Task.Run(EditDepartNote);
+                }
 
                 foreach (Window window in Application.Current.Windows)
                 {

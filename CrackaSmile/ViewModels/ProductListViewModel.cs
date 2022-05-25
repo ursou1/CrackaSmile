@@ -2,6 +2,7 @@
 using CrackaSmile.Views;
 using ModelsApi;
 using Spire.Xls;
+using Spire.Xls.Charts;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -53,6 +54,29 @@ namespace CrackaSmile.ViewModels
                 SignalChanged();
             }
         }
+
+        public List<UnitApi> units { get; set; }
+        public List<UnitApi> Units
+        {
+            get => units;
+            set
+            {
+                units = value;
+                SignalChanged();
+            }
+        }
+
+        public List<ProductTypeApi> productTypes { get; set; }
+        public List<ProductTypeApi> ProductTypes
+        {
+            get => productTypes;
+            set
+            {
+                productTypes = value;
+                SignalChanged();
+            }
+        }
+
 
         public List<ProductApi> products { get; set; }
         public List<ProductApi> Products
@@ -310,6 +334,13 @@ namespace CrackaSmile.ViewModels
             SignalChanged("AutoTB");
             #endregion
 
+            var res1 = await Api.GetListAsync<ProductTypeApi[]>("ProductType");
+            var res2 = await Api.GetListAsync<UnitApi[]>("Unit");
+
+            productTypes = new List<ProductTypeApi>(res1);
+
+            units = new List<UnitApi>(res2);
+
 
             searchResult = new List<ProductApi>(Products);
             mysearch = new List<ProductApi>(Products);
@@ -359,6 +390,10 @@ namespace CrackaSmile.ViewModels
         #region Вывод в эксель
         public void Print()
         {
+
+
+
+
             var workbook = new Workbook();
             var sheet = workbook.Worksheets[0];
             sheet.Range["F1"].Value = DateTime.Now.ToShortDateString();
@@ -376,11 +411,21 @@ namespace CrackaSmile.ViewModels
 
             sheet.Range["E3"].Value = $"Цена   ";
 
+            sheet.Range["F3"].Value = $"Ед. изм.   ";
+
+            sheet.Range["G3"].Value = $"Тип продукта   ";
+
             int index = 4;
             int count = 1;
 
             foreach (var product in products)
             {
+                var unitid = product.Unit = units.First(s => s.Id == product.UnitId);
+                //var delid = product.DeliveryNote = ChangeQuantityProducts.First(s => s.Id == product.Idsqp);
+                //var depid = product.DeliveryNote = ChangeQuantityProducts.First(s => s.Id == product.Idsqp);
+                var prodtype = product.ProductType = productTypes.First(s => s.Id == product.ProductTypeId);
+
+
                 sheet.Range[$"A{index}"].NumberValue = count++;
 
                 sheet.Range[$"B{index}"].Value = product.Code;
@@ -391,23 +436,27 @@ namespace CrackaSmile.ViewModels
 
                 sheet.Range[$"E{index}"].Value = product.Price.ToString();
 
+                sheet.Range[$"F{index}"].Value = product.Unit.Title;
+                
+                sheet.Range[$"G{index}"].Value = product.ProductType.Title;
+
                 index++;
             }
 
             int bolding = products.Count + 3;
-            sheet.Range["A3:E3"].Style.Font.IsBold = true;
+            sheet.Range["A3:G3"].Style.Font.IsBold = true;
 
-            sheet.Range[$"A3:E{bolding}"].Style.Borders[BordersLineType.EdgeTop].Color = Color.FromArgb(0, 0, 128);
-            sheet.Range[$"A3:E{bolding}"].Style.Borders[BordersLineType.EdgeTop].LineStyle = LineStyleType.Thin;
+            sheet.Range[$"A3:G{bolding}"].Style.Borders[BordersLineType.EdgeTop].Color = Color.FromArgb(0, 0, 128);
+            sheet.Range[$"A3:G{bolding}"].Style.Borders[BordersLineType.EdgeTop].LineStyle = LineStyleType.Thin;
 
-            sheet.Range[$"A3:E{bolding}"].Style.Borders[BordersLineType.EdgeBottom].Color = Color.FromArgb(0, 0, 128);
-            sheet.Range[$"A3:E{bolding}"].Style.Borders[BordersLineType.EdgeBottom].LineStyle = LineStyleType.Thin;
+            sheet.Range[$"A3:G{bolding}"].Style.Borders[BordersLineType.EdgeBottom].Color = Color.FromArgb(0, 0, 128);
+            sheet.Range[$"A3:G{bolding}"].Style.Borders[BordersLineType.EdgeBottom].LineStyle = LineStyleType.Thin;
 
-            sheet.Range[$"A3:E{bolding}"].Style.Borders[BordersLineType.EdgeLeft].Color = Color.FromArgb(0, 0, 128);
-            sheet.Range[$"A3:E{bolding}"].Style.Borders[BordersLineType.EdgeLeft].LineStyle = LineStyleType.Thin;
+            sheet.Range[$"A3:G{bolding}"].Style.Borders[BordersLineType.EdgeLeft].Color = Color.FromArgb(0, 0, 128);
+            sheet.Range[$"A3:G{bolding}"].Style.Borders[BordersLineType.EdgeLeft].LineStyle = LineStyleType.Thin;
 
-            sheet.Range[$"A3:E{bolding}"].Style.Borders[BordersLineType.EdgeRight].Color = Color.FromArgb(0, 0, 128);
-            sheet.Range[$"A3:E{bolding}"].Style.Borders[BordersLineType.EdgeRight].LineStyle = LineStyleType.Thin;
+            sheet.Range[$"A3:G{bolding}"].Style.Borders[BordersLineType.EdgeRight].Color = Color.FromArgb(0, 0, 128);
+            sheet.Range[$"A3:G{bolding}"].Style.Borders[BordersLineType.EdgeRight].LineStyle = LineStyleType.Thin;
 
             //sheet.Range["A3:I100"].Style.Borders[BordersLineType.EdgeTop].Color = Color.FromArgb(0, 0, 128);
             //sheet.Range["A3:I100"].Style.Borders[BordersLineType.EdgeTop].LineStyle = LineStyleType.Thin;
@@ -417,6 +466,44 @@ namespace CrackaSmile.ViewModels
             //sheet.Range["A3:I100"].Style.Borders[BordersLineType.EdgeLeft].LineStyle = LineStyleType.Thin;
             //sheet.Range["A3:I100"].Style.Borders[BordersLineType.EdgeRight].Color = Color.FromArgb(0, 0, 128);
             //sheet.Range["A3:I100"].Style.Borders[BordersLineType.EdgeRight].LineStyle = LineStyleType.Thin;
+
+            Chart chart = sheet.Charts.Add(ExcelChartType.Pie3D);
+            chart.DataRange = sheet.Range["K2:L5"];
+            chart.SeriesDataFromRange = false;
+            chart.LeftColumn = 10; //колонка спавна слева
+            chart.TopRow = 7; // отступ строк сверху
+            chart.RightColumn = 15; //колонка спавна справа
+            chart.BottomRow = 20; // высота диаграмы
+            chart.ChartTitle = "Соотношение количества";
+            chart.ChartTitleArea.IsBold = true;
+            chart.ChartTitleArea.Size = 12;
+            ChartSerie cs = chart.Series[0];
+            cs.Values = sheet.Range[$"D4:D{bolding}"];
+            cs.DataPoints.DefaultDataPoint.DataLabels.HasValue = true;
+
+
+
+            Chart chartCercle = sheet.Charts.Add();
+            chartCercle.ChartType = ExcelChartType.Doughnut;
+            chartCercle.DataRange = sheet.Range[$"D4:D{bolding}"];
+            chartCercle.SeriesDataFromRange = false;
+
+            chartCercle.LeftColumn = 10;//10
+            chartCercle.TopRow = 22;//22
+            chartCercle.RightColumn = 15;//15
+            chartCercle.BottomRow = 32;//34
+
+            chartCercle.ChartTitle = "Кол-во товаров";
+            chartCercle.ChartTitleArea.IsBold = true;
+            chartCercle.ChartTitleArea.Size = 12;
+            chartCercle.Legend.Delete();
+            foreach (ChartSerie csCercle in chartCercle.Series)
+            {
+                csCercle.DataPoints.DefaultDataPoint.DataLabels.HasPercentage = true;
+            }
+
+
+
 
             sheet.AllocatedRange.AutoFitColumns();
 

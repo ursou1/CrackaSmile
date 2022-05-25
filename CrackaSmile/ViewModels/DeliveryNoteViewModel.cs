@@ -223,7 +223,10 @@ namespace CrackaSmile.ViewModels
                 editDeliveryNote.ShowDialog();
                 AddDelNoteNotification();
                 Thread.Sleep(200);
-                Task.Run(TakeListDeliveryNotes);
+                Task.Run(TakeListDeliveryNotes).ContinueWith(s =>
+                {
+                    InitPagination();
+                });
             });
 
             EditDeliveryNote = new CustomCommand(() =>
@@ -233,7 +236,10 @@ namespace CrackaSmile.ViewModels
                 editDeliveryNote.ShowDialog();
                 EditDelNoteNotification();
                 Thread.Sleep(200);
-                Task.Run(TakeListDeliveryNotes);
+                Task.Run(TakeListDeliveryNotes).ContinueWith(s =>
+                {
+                    InitPagination();
+                });
             });
 
             DeleteDeliveryNote = new CustomCommand(() =>

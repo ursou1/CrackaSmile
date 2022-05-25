@@ -107,7 +107,7 @@
             <StackPanel Orientation="Horizontal" Grid.Column="2" HorizontalAlignment="Right">
                 <Label Content="Кол-во записей на странице:" Margin="4"/>
                 <ComboBox Width="200" ItemsSource="{Binding ViewCountRows}" SelectedItem="{Binding SelectedViewCountRows}" Margin="4"/>
-                <Button Content="Создать накладную" Command="{Binding AddDepartNote}" Margin="4"/>
+                <Button Content="Добавить" Padding="3" Command="{Binding AddDepartNote}" Margin="4" Cursor="Hand"/>
             </StackPanel>
         </StackPanel>
     </Grid>

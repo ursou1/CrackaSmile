@@ -225,7 +225,10 @@ namespace CrackaSmile.ViewModels
                 editDepartNote.ShowDialog();
                 AddDepNoteNotification();
                 Thread.Sleep(200);
-                Task.Run(TakeListDepartNotes);
+                Task.Run(TakeListDepartNotes).ContinueWith(s =>
+                {
+                    InitPagination();
+                });
             });
 
             EditDepartNote = new CustomCommand(() =>
@@ -235,7 +238,10 @@ namespace CrackaSmile.ViewModels
                 editDepartNote.ShowDialog();
                 EditDepNoteNotification();
                 Thread.Sleep(200);
-                Task.Run(TakeListDepartNotes);
+                Task.Run(TakeListDepartNotes).ContinueWith(s =>
+                {
+                    InitPagination();
+                });
             });
 
             DeleteDepartNote = new CustomCommand(() =>
