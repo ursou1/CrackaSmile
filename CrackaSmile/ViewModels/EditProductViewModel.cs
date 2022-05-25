@@ -151,6 +151,8 @@ namespace CrackaSmile.ViewModels
         public CustomCommand SelectImage { get; set; }
         public CustomCommand Add { get; set; }
         public CustomCommand TakeOff { get; set; }
+        
+
 
         #endregion
 
@@ -204,6 +206,7 @@ namespace CrackaSmile.ViewModels
             {
                 NotNullCountMethod();
             });
+
 
             Save = new CustomCommand(() =>
             {

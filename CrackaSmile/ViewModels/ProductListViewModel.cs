@@ -169,7 +169,7 @@ namespace CrackaSmile.ViewModels
         public CustomCommand InfoProduct { get; set; }
         public CustomCommand DeleteProduct { get; set; }
         public CustomCommand ExportExcel { get; set; }
-
+        public CustomCommand Delete { get; set; }
         public CustomCommand BackPage { get; set; }
         public CustomCommand ForwardPage { get; set; }
         #endregion
@@ -206,6 +206,12 @@ namespace CrackaSmile.ViewModels
                 editProduct.ShowDialog();
                 Thread.Sleep(200);
                 Task.Run(TakeListProducts);
+            });
+
+            Delete = new CustomCommand(() =>
+            {
+                if (SelectedProduct == null) return;///////////////////////////
+
             });
 
             ExportExcel = new CustomCommand(() =>
@@ -356,7 +362,8 @@ namespace CrackaSmile.ViewModels
 
         public async Task DeleteProductMethod()
         {
-            await Api.DeleteAsync<ProductApi>(selectedProduct, "Product");
+
+            await Api.PutAsync<ProductApi>(selectedProduct, "Product");
         }
 
         private void InitPagination()

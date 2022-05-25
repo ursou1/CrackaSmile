@@ -23,7 +23,8 @@
             <TextBox Text="{Binding Number}" Width="200" FontSize="20"/>
 
             <Label Content="Дата:" FontSize="20" HorizontalAlignment="Center" Margin="0 5 0 5"/>
-                <TextBox Text="{Binding DepartDate, StringFormat='{}{0:dd/MM/yyyy}'}" Width="200" FontSize="20"/>
+                <!--<TextBox Text="{Binding DepartDate, StringFormat='{}{0:dd/MM/yyyy}'}" Width="200" FontSize="20"/>-->
+                <DatePicker SelectedDate="{Binding DepartDate}" Width="200" HorizontalAlignment="Center"/>
 
             <Label Content="Клиент:" FontSize="20" HorizontalAlignment="Center" Margin="0 5 0 5"/>
         </StackPanel>

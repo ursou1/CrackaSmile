@@ -203,8 +203,11 @@ namespace CrackaSmile.ViewModels
                 selectedProduct.DeliveryNoteId = deliveryNote.Id;
                 Task.Run(EditProduct);
                 Thread.Sleep(100);
-                Task.Run(TakeListProducts);
-                
+                Task.Run(TakeListProducts).ContinueWith(s =>
+                {
+                    InitPagination();
+                });
+
             });
 
             DeleteProductInNote = new CustomCommand(() =>
@@ -214,7 +217,10 @@ namespace CrackaSmile.ViewModels
                     SelectedProductInNote.DeliveryNoteId = null;
                     Task.Run(DeleteProductInNoteMethod);
                     Thread.Sleep(100);
-                    Task.Run(TakeListProducts);
+                    Task.Run(TakeListProducts).ContinueWith(s =>
+                    {
+                        InitPagination();
+                    });
                 }
                 else { MessageBox.Show("Проверьте заполнение данных!");}
             });

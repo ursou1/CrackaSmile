@@ -30,8 +30,8 @@
 
                     <Grid Grid.Column="0">
                         <Grid.RowDefinitions>
-                            <RowDefinition/>
-                            <RowDefinition/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition />
                         </Grid.RowDefinitions>
 
                         <StackPanel Grid.Row="0" DataContext="{Binding AddProduct}">
@@ -52,7 +52,7 @@
 
                         <StackPanel Grid.Row="1" Margin="0 20 0 0" DataContext="{Binding AddProduct}">
                             <Label Content="Описание:" FontSize="20" Margin="0 5 0 5"/>
-                            <TextBox Text="{Binding Description}" FontSize="20" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" TextWrapping="Wrap"  Height="180" Margin="10 10 10 10"/>
+                            <TextBox Text="{Binding Description}" FontSize="20" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" TextWrapping="Wrap"  Height="170" Margin="10 10 10 10"/>
                         </StackPanel>
 
                     </Grid>

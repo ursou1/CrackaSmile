@@ -68,7 +68,7 @@ namespace CrackaSmile.ViewModels
                 .AnimationOutDuration(2)
                 .Accent("#327d0b")
                 .Background("#3E63BB")
-                .HasMessage("Вы изменили поставщика.")
+                .HasMessage("Вы изменили накладную.")
                 .Dismiss().WithDelay(TimeSpan.FromSeconds(3))
                 .Queue();
         }
@@ -82,7 +82,7 @@ namespace CrackaSmile.ViewModels
                 .AnimationOutDuration(2)
                 .Accent("#327d0b")
                 .Background("#EEA75D")
-                .HasMessage("Вы добавили поставщика.")
+                .HasMessage("Вы добавили накладную.")
                 .Dismiss().WithDelay(TimeSpan.FromSeconds(3))
                 .Queue();
         }
@@ -96,7 +96,7 @@ namespace CrackaSmile.ViewModels
                 .AnimationOutDuration(2)
                 .Accent("#700d04")
                 .Background("#D74258")
-                .HasMessage("Вы удалили поставщика.")
+                .HasMessage("Вы удалили накладную.")
                 .Dismiss().WithDelay(TimeSpan.FromSeconds(3))
                 .Queue();
         }

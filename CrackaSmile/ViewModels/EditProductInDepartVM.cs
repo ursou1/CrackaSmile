@@ -14,6 +14,17 @@ namespace CrackaSmile.ViewModels
     {
 
         #region properties
+        public List<ProductApi> countForSearch { get; set; }
+        public List<ProductApi> CountForSearch
+        {
+            get => countForSearch;
+            set
+            {
+                countForSearch = value;
+                SignalChanged();
+            }
+        }
+
         public ProductApi selectedProduct;
         public ProductApi SelectedProduct
         {
@@ -201,7 +212,10 @@ namespace CrackaSmile.ViewModels
                 selectedProduct.DepartNoteId = departNote.Id;
                 Task.Run(EditProduct);
                 Thread.Sleep(100);
-                Task.Run(TakeListProducts);
+                Task.Run(TakeListProducts).ContinueWith(s =>
+                {
+                    InitPagination();
+                });
 
             });
             DeleteProductInNote = new CustomCommand(() =>
@@ -211,7 +225,11 @@ namespace CrackaSmile.ViewModels
                     SelectedProductInNote.DepartNoteId = null;
                     Task.Run(DeleteProductInNoteMethod);
                     Thread.Sleep(100);
-                    Task.Run(TakeListProducts);
+                    Task.Run(TakeListProducts).ContinueWith(s=>
+                    {
+                        InitPagination();
+                    });
+
                 }
                 else { MessageBox.Show("Проверьте заполнение данных!"); }
             });
@@ -232,6 +250,8 @@ namespace CrackaSmile.ViewModels
             softdeletes = new List<SoftDeleteApi>(result1);
 
             ProductsInNote = new List<ProductApi>();
+
+            
 
             foreach (var product in Products)
             {
@@ -262,6 +282,7 @@ namespace CrackaSmile.ViewModels
 
             mysearch = new List<ProductApi>(ProductFree);
             searchResult = new List<ProductApi>(ProductFree);
+            CountForSearch = new List<ProductApi>(ProductFree);//для вывода кол-ва записей снизу
         }
         public async Task DeleteProductInNoteMethod()
         {
@@ -284,7 +305,13 @@ namespace CrackaSmile.ViewModels
 
         private void InitPagination()
         {
-            SearchCountRows = $"Найдено записей: {searchResult.Count} из {ProductFree.Count}";
+            if (CountForSearch != null)
+            {
+                SearchCountRows = $"Найдено записей: {searchResult.Count} из {CountForSearch.Count()}";
+            }
+            else
+                SearchCountRows = $"Ни одной записи не найдено";
+
             paginationPageIndex = 0;
         }
 
